@@ -1,8 +1,8 @@
 package com.scorpio.distancecalculator.tracker
 
 import android.location.Location
-import com.scorpio.distancecalculator.LocationDao
-import com.scorpio.distancecalculator.LocationEntity
+import com.scorpio.distancecalculator.db.LocationDao
+import com.scorpio.distancecalculator.db.LocationEntity
 import com.scorpio.distancecalculator.locationproducer.MLocationProducer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

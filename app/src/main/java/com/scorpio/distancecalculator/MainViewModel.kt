@@ -1,15 +1,13 @@
 package com.scorpio.distancecalculator
 
-import android.icu.util.TimeUnit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationServices
+import com.scorpio.distancecalculator.db.AppDatabase
 import com.scorpio.distancecalculator.locationproducer.DefaultLocationProducer
 import com.scorpio.distancecalculator.tracker.RunningTracker
 import com.scorpio.distancecalculator.tracker.TrackingState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds

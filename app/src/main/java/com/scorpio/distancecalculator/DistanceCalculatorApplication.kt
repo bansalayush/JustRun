@@ -1,7 +1,7 @@
 package com.scorpio.distancecalculator
 
 import android.app.Application
-import com.scorpio.distancecalculator.AppDatabase
+import com.scorpio.distancecalculator.db.AppDatabase
 
 class DistanceCalculatorApplication : Application() {
 

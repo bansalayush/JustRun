@@ -1,4 +1,4 @@
-package com.scorpio.distancecalculator
+package com.scorpio.distancecalculator.db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

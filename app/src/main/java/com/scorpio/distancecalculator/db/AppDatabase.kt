@@ -1,4 +1,4 @@
-package com.scorpio.distancecalculator
+package com.scorpio.distancecalculator.db
 
 import android.content.Context
 import androidx.room.Database

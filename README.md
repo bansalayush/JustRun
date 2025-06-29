@@ -40,6 +40,17 @@ A simple Android app to track running activities, calculate distance, and monito
 - Tap **RESUME** to continue.
 - Tap **FINISH** to end and reset the session.
 
+
+# TODO
+
+- [ ] Setup CI/CD
+  - [ ] Build
+  - [ ] Test
+  - [ ] Lint
+- [ ] Change to a more user-friendly UI
+- [ ] Add Hilt for Dependency Injection
+- [ ] Organize dependency versions in `libs.toml.version`
+
 ## License
 
 MIT License. See `LICENSE` for details.

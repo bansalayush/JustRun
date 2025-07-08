@@ -47,9 +47,13 @@ A simple Android app to track running activities, calculate distance, and monito
   - [ ] Build
   - [ ] Test
   - [ ] Lint
+- write unit test cases for `RunningTracker.kt`
 - [ ] Change to a more user-friendly UI
 - [ ] Add Hilt for Dependency Injection
 - [ ] Organize dependency versions in `libs.toml.version`
+- [ ] optimize queries to database for location data @RunningTracker.kt#startDistanceCalculation:L56
+- [ ] use Foreground service for location updates and calculation 
+- [ ] use a workmanager to delete old activity data when db size is above a specific threshold 
 
 ## License
 

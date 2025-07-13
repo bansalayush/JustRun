@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.lifecycle.service)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -68,8 +69,6 @@ dependencies {
     // Lifecycle-aware coroutine scopes (optional but recommended for Android)
     // For ViewModels
     implementation(libs.androidx.lifecycle.viewmodel.ktx) // Check for the latest version
-    // For Lifecycle Scopes (e.g., in Activities or Fragments)
-    implementation(libs.androidx.lifecycle.runtime.ktx.v262) // Check for the latest version
     // For LiveData builder
     implementation(libs.androidx.lifecycle.livedata.ktx) // Check for the latest version
 
@@ -80,6 +79,14 @@ dependencies {
 
     // Optional - Kotlin Extensions and Coroutines support for Room
     implementation(libs.androidx.room.ktx)
+
+    implementation(libs.work.runtime.ktx)
+
+    // Jetpack DataStore Preferences
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation("com.jakewharton.timber:timber:5.0.1")
+
+
 
 
 }

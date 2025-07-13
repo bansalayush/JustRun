@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -83,8 +84,8 @@ dependencies {
     implementation(libs.work.runtime.ktx)
 
     // Jetpack DataStore Preferences
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
-    implementation("com.jakewharton.timber:timber:5.0.1")
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.timber)
 
 
 

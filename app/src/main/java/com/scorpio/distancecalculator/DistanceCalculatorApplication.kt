@@ -17,6 +17,22 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.scorpio.distancecalculator.db.AppDatabase
+import com.scorpio.distancecalculator.db.DbCleanupWork
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.time.Duration.ofHours
+import java.util.UUID
+import java.util.concurrent.TimeUnit
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.measureTime
+import kotlin.time.measureTimedValue
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class DistanceCalculatorApplication : Application() {
     val database: AppDatabase by lazy {
@@ -29,10 +45,44 @@ class DistanceCalculatorApplication : Application() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
         mContext = this
-        // You can perform other application-wide initializations here if needed.
-        // For example, if you wanted to ensure the database is created on app start,
-        // you could access it here, but lazy initialization defers it.
-        // val db = database // This would trigger the lazy initialization
+        println(measureTime {
+            database
+        })
+
+        //todo: move this to a helper class 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "running-channel",
+                "Running Notifications",
+                NotificationManager.IMPORTANCE_MIN
+            )
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        appScope.launch(Dispatchers.IO) {
+            val key = stringPreferencesKey("db_cleanup_work_id")
+            val value = dataStore.data.map { prefs ->
+                prefs[key]
+            }.first()
+            Timber.tag("CleanupWork-SETUP").d(value)
+            if (value.isNullOrEmpty()) {
+                this@DistanceCalculatorApplication.dataStore.edit { prefs ->
+                    val work =
+                        PeriodicWorkRequestBuilder<DbCleanupWork>(20, TimeUnit.MINUTES).build()
+                    prefs[key] = work.id.toString()
+                    WorkManager.getInstance(this@DistanceCalculatorApplication)
+                        .enqueueUniquePeriodicWork(
+                            DbCleanupWork.WORK_NAME,
+                            ExistingPeriodicWorkPolicy.KEEP,
+                            work
+                        )
+                }
+            }
+        }
+
+
     }
 
     companion object {

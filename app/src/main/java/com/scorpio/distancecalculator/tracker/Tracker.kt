@@ -14,3 +14,7 @@ interface Tracker {
 enum class TrackingState {
     finished, active, paused
 }
+
+enum class TrackerCommands {
+    pause, resume, finish
+}

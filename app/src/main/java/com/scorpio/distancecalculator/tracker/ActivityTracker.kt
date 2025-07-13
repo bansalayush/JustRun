@@ -19,11 +19,14 @@ abstract class ActivityTracker : Tracker {
     override val elapsedTimeFlow: StateFlow<Long> = _elapsedTimeFlow
 
     private var elapsedTimeJob: Job? = null
-    protected val currentActivityUUID by UUIDDelegate()
+    var currentActivityUUID = -1L
+        private set
+//    by UUIDDelegate()
 
     override suspend fun resume() {
         if (_trackingState.value == TrackingState.active) return
-        currentActivityUUID
+        if (_trackingState.value == TrackingState.finished)
+            currentActivityUUID = System.currentTimeMillis()
         _trackingState.value = TrackingState.active
         elapsedTimeJob = scope.launch {
             while (true) {
@@ -44,5 +47,9 @@ abstract class ActivityTracker : Tracker {
         elapsedTimeJob?.cancel(CancellationException("FINISHED ELAPSED TIME"))
         elapsedTimeJob = null
         _elapsedTimeFlow.value = 0L
+    }
+
+    companion object {
+        const val IDLE_TRACKING_UUID = -1L
     }
 }

@@ -53,7 +53,12 @@ A simple Android app to track running activities, calculate distance, and monito
 - [ ] Organize dependency versions in `libs.toml.version`
 - [ ] optimize queries to database for location data @RunningTracker.kt#startDistanceCalculation:L56
 - [ ] use Foreground service for location updates and calculation 
-- [ ] use a workmanager to delete old activity data when db size is above a specific threshold 
+- [ ] use a workmanager to delete old activity data when db size is above a specific threshold
+- [ ] add a logger to log when the work manager was triggered, using Datastore
+- [ ] persistent logging via abstraction . File and datastore based impl
+- [ ] final distance calculation and a list page for all activities 
+  - [ ] plan this with a new table addition to practise DB migration or addition
+- [ ] remove notification and stop RunningService in case there's no running activity and user closes the app 
 
 ## License
 

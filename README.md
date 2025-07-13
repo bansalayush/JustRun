@@ -50,15 +50,21 @@ A simple Android app to track running activities, calculate distance, and monito
 - write unit test cases for `RunningTracker.kt`
 - [ ] Change to a more user-friendly UI
 - [ ] Add Hilt for Dependency Injection
-- [ ] Organize dependency versions in `libs.toml.version`
+- [x] Organize dependency versions in `libs.toml.version`
 - [ ] optimize queries to database for location data @RunningTracker.kt#startDistanceCalculation:L56
-- [ ] use Foreground service for location updates and calculation 
-- [ ] use a workmanager to delete old activity data when db size is above a specific threshold
-- [ ] add a logger to log when the work manager was triggered, using Datastore
-- [ ] persistent logging via abstraction . File and datastore based impl
+- [x] use Foreground service for location updates and calculation 
+- [ ] add WorkManager to periodically delete data
+  - [ ] delete old activity data when db size is above a specific threshold
+  - [x] Trigger a workmanager to trigger periodic work
+  - [x] add a logger to log when the work manager was triggered, using Datastore
 - [ ] final distance calculation and a list page for all activities 
   - [ ] plan this with a new table addition to practise DB migration or addition
-- [ ] remove notification and stop RunningService in case there's no running activity and user closes the app 
+- [ ] remove notification and stop RunningService in case there's no running activity and user closes the app
+- [ ] Logging Module
+  - [ ] abstract Logger
+  - [ ] Event Logger (firebase,mixpanel)
+  - [ ] Event Logger (file based, till we don't integrate mixpanel)
+    - [ ] debug view for these events 
 
 ## License
 

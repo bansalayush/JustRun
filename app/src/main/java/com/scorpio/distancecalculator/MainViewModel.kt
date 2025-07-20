@@ -2,10 +2,11 @@ package com.scorpio.distancecalculator
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.scorpio.distancecalculator.tracker.TrackerProvider
-import com.scorpio.distancecalculator.tracker.TrackingState
 import com.scorpio.distancecalculator.db.AppDatabase
 import com.scorpio.distancecalculator.tracker.ActivityTracker.Companion.IDLE_TRACKING_UUID
+import com.scorpio.distancecalculator.tracker.TrackerProvider
+import com.scorpio.distancecalculator.tracker.TrackingState
+import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStateFinished
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
@@ -38,7 +39,7 @@ class MainViewModel : ViewModel() {
     init {
         viewModelScope.launch {
             trackingState.collectLatest {
-                if (it == TrackingState.finished && runningTracker.currentActivityUUID != IDLE_TRACKING_UUID) {
+                if (it == TrackingStateFinished && runningTracker.currentActivityUUID != IDLE_TRACKING_UUID) {
                     makeFinalCalculations(runningTracker.currentActivityUUID)
                 }
             }

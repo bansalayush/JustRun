@@ -42,12 +42,16 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.scorpio.distancecalculator.MainViewModel
 import com.scorpio.distancecalculator.RunningService
-import com.scorpio.distancecalculator.tracker.TrackerCommands
-import com.scorpio.distancecalculator.tracker.TrackingState
+import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandFinish
+import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandPause
+import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandResume
+import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStateActive
+import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStateFinished
+import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStatePaused
 
 @Composable
 fun ControlsLayout(viewmodel: MainViewModel) {
-    val trackingState = viewmodel.trackingState.collectAsStateWithLifecycle(TrackingState.finished)
+    val trackingState = viewmodel.trackingState.collectAsStateWithLifecycle(TrackingStateFinished)
     val context = LocalContext.current
 
     Row(
@@ -56,13 +60,13 @@ fun ControlsLayout(viewmodel: MainViewModel) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         when (trackingState.value) {
-            TrackingState.finished -> {
+            TrackingStateFinished -> {
                 Box(modifier = Modifier.fillMaxWidth()) {
                     AnimatedControlButton(
                         modifier = Modifier.align(Alignment.Center),
                         onClick = {
                             Intent(context, RunningService::class.java).apply {
-                                action = TrackerCommands.resume.toString()
+                                action = TrackerCommandResume.toString()
                             }.also { context.startService(it) }
                         },
                         icon = Icons.Default.PlayArrow,
@@ -73,13 +77,13 @@ fun ControlsLayout(viewmodel: MainViewModel) {
                 }
             }
 
-            TrackingState.active -> {
+            TrackingStateActive -> {
                 Box(modifier = Modifier.fillMaxWidth()) {
                     AnimatedControlButton(
                         modifier = Modifier.align(Alignment.Center),
                         onClick = {
                             Intent(context, RunningService::class.java).apply {
-                                action = TrackerCommands.pause.toString()
+                                action = TrackerCommandPause.toString()
                             }.also { context.startService(it) }
                         },
                         icon = null,
@@ -90,7 +94,7 @@ fun ControlsLayout(viewmodel: MainViewModel) {
                 }
             }
 
-            TrackingState.paused -> {
+            TrackingStatePaused -> {
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier.fillMaxWidth(),
@@ -99,7 +103,7 @@ fun ControlsLayout(viewmodel: MainViewModel) {
                     AnimatedControlButton(
                         onClick = {
                             Intent(context, RunningService::class.java).apply {
-                                action = TrackerCommands.finish.toString()
+                                action = TrackerCommandFinish.toString()
                             }.also { context.startService(it) }
                         },
                         icon = null,
@@ -111,7 +115,7 @@ fun ControlsLayout(viewmodel: MainViewModel) {
                     AnimatedControlButton(
                         onClick = {
                             Intent(context, RunningService::class.java).apply {
-                                action = TrackerCommands.resume.toString()
+                                action = TrackerCommandResume.toString()
                             }.also { context.startService(it) }
                         },
                         icon = Icons.Default.PlayArrow,

@@ -8,7 +8,9 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.scorpio.distancecalculator.notification.NOTIFICATION_CHANNEL_ID
-import com.scorpio.distancecalculator.tracker.TrackerCommands.*
+import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandFinish
+import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandPause
+import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandResume
 import com.scorpio.distancecalculator.tracker.TrackerProvider
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -35,21 +37,21 @@ class RunningService : LifecycleService() {
         intent?.action?.let {
             println("Running Service received action: $it")
             when (it) {
-                resume.toString() -> {
+                TrackerCommandResume.toString() -> {
                     lifecycleScope.launch {
                         runningTracker.resume()
                     }
                     handleNotification(it)
                 }
 
-                pause.toString() -> {
+                TrackerCommandPause.toString() -> {
                     lifecycleScope.launch {
                         runningTracker.pause()
                     }
                     handleNotification(it)
                 }
 
-                finish.toString() -> {
+                TrackerCommandFinish.toString() -> {
                     lifecycleScope.launch {
                         val activityUUID = runningTracker.finish()
 

@@ -7,14 +7,20 @@ interface Tracker {
     val elapsedTimeFlow: StateFlow<Long>
 
     suspend fun resume()
+
     suspend fun pause()
+
     suspend fun finish()
 }
 
 enum class TrackingState {
-    finished, active, paused
+    TrackingStateFinished,
+    TrackingStateActive,
+    TrackingStatePaused,
 }
 
 enum class TrackerCommands {
-    pause, resume, finish
+    TrackerCommandPause,
+    TrackerCommandResume,
+    TrackerCommandFinish,
 }

@@ -1,5 +1,8 @@
 package com.scorpio.distancecalculator.tracker
 
+import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStateActive
+import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStateFinished
+import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStatePaused
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +15,7 @@ import kotlin.coroutines.cancellation.CancellationException
 abstract class ActivityTracker : Tracker {
     abstract val scope: CoroutineScope
 
-    private val _trackingState = MutableStateFlow(TrackingState.finished)
+    private val _trackingState = MutableStateFlow(TrackingStateFinished)
     override val trackingState: StateFlow<TrackingState> = _trackingState
 
     private val _elapsedTimeFlow = MutableStateFlow(0L)
@@ -24,26 +27,28 @@ abstract class ActivityTracker : Tracker {
 //    by UUIDDelegate()
 
     override suspend fun resume() {
-        if (_trackingState.value == TrackingState.active) return
-        if (_trackingState.value == TrackingState.finished)
+        if (_trackingState.value == TrackingStateActive) return
+        if (_trackingState.value == TrackingStateFinished) {
             currentActivityUUID = System.currentTimeMillis()
-        _trackingState.value = TrackingState.active
-        elapsedTimeJob = scope.launch {
-            while (true) {
-                delay(1000)
-                _elapsedTimeFlow.update { it + 1 }
-            }
         }
+        _trackingState.value = TrackingStateActive
+        elapsedTimeJob =
+            scope.launch {
+                while (true) {
+                    delay(1000)
+                    _elapsedTimeFlow.update { it + 1 }
+                }
+            }
     }
 
     override suspend fun pause() {
-        _trackingState.value = TrackingState.paused
+        _trackingState.value = TrackingStatePaused
         elapsedTimeJob?.cancel(CancellationException("PAUSED ELAPSED TIME"))
         elapsedTimeJob = null
     }
 
     override suspend fun finish() {
-        _trackingState.value = TrackingState.finished
+        _trackingState.value = TrackingStateFinished
         elapsedTimeJob?.cancel(CancellationException("FINISHED ELAPSED TIME"))
         elapsedTimeJob = null
         _elapsedTimeFlow.value = 0L

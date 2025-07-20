@@ -7,14 +7,18 @@ import com.scorpio.distancecalculator.locationproducer.MLocationProducer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class RunningTracker(
     private val locationProducer: MLocationProducer,
-    private val locationDao: LocationDao
+    private val locationDao: LocationDao,
 ) : ActivityTracker() {
-
     override val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
     private var locationTrackingJob: Job? = null
@@ -23,44 +27,46 @@ class RunningTracker(
     private val distanceMutableFlow = MutableStateFlow(0f)
     val distanceFlow: StateFlow<Float> = distanceMutableFlow
 
-    val speedStateFlow: StateFlow<Float> = combine(
-        distanceMutableFlow,
-        elapsedTimeFlow
-    ) { distance, time ->
-        val distanceInKms = distance / 1000f
-        val timeInHrs = time / 3600f
-        if (timeInHrs != 0f) distanceInKms / timeInHrs else 0f
-    }.stateIn(
-        scope,
-        SharingStarted.WhileSubscribed(300),
-        0f
-    )
+    val speedStateFlow: StateFlow<Float> =
+        combine(
+            distanceMutableFlow,
+            elapsedTimeFlow,
+        ) { distance, time ->
+            val distanceInKms = distance / 1000f
+            val timeInHrs = time / 3600f
+            if (timeInHrs != 0f) distanceInKms / timeInHrs else 0f
+        }.stateIn(
+            scope,
+            SharingStarted.WhileSubscribed(300),
+            0f,
+        )
 
     private var lastTimestamp: Long = 0
 
     override suspend fun resume() {
         super.resume()
         println("DEBUG distanceCalculationJob")
-        locationTrackingJob = scope.launch {
-            locationProducer.startLocationUpdates().collectLatest { location ->
-                locationDao.insertLocation(location.toEntity(currentActivityUUID))
-                startDistanceCalculation()
+        locationTrackingJob =
+            scope.launch {
+                locationProducer.startLocationUpdates().collectLatest { location ->
+                    locationDao.insertLocation(location.toEntity(currentActivityUUID))
+                    startDistanceCalculation()
+                }
             }
-        }
     }
 
     private suspend fun startDistanceCalculation() {
         distanceCalculationJob?.join()
-        distanceCalculationJob = scope.launch {
-            val latestLocations =
-                locationDao.getLastTenLocationsSync(lastTimestamp, currentActivityUUID)
-            if (latestLocations.size >= 10) {
-                lastTimestamp = latestLocations.maxOf { it.timestamp }
-                val calculatedDistance = calculateDistance(latestLocations)
-                distanceMutableFlow.value += calculatedDistance
+        distanceCalculationJob =
+            scope.launch {
+                val latestLocations =
+                    locationDao.getLastTenLocationsSync(lastTimestamp, currentActivityUUID)
+                if (latestLocations.size >= 10) {
+                    lastTimestamp = latestLocations.maxOf { it.timestamp }
+                    val calculatedDistance = calculateDistance(latestLocations)
+                    distanceMutableFlow.value += calculatedDistance
+                }
             }
-        }
-
     }
 
     override suspend fun pause() {
@@ -95,7 +101,7 @@ class RunningTracker(
                 start.longitude,
                 end.latitude,
                 end.longitude,
-                distance
+                distance,
             )
             totalDistance += distance[0]
         }

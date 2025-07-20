@@ -22,42 +22,37 @@ import com.scorpio.distancecalculator.ui.theme.composables.TimeMetricDisplay
 import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
-
     private val viewModel by viewModels<MainViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         setContent {
             DistanceCalculatorTheme {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .navigationBarsPadding()
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .navigationBarsPadding(),
                 ) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceAround
+                        verticalArrangement = Arrangement.SpaceAround,
                     ) {
                         DistanceMetricDisplay(
-                            viewModel = viewModel
+                            viewModel = viewModel,
                         )
 
                         // Time Section
                         TimeMetricDisplay(
-                            viewModel
+                            viewModel,
                         )
 
                         ControlsLayout(viewModel)
-
-                        // Speed Section
-//                        MetricDisplay(
-//                            value = "0.0",
-//                            label = "SPEED"
-//                        )
                     }
                 }
             }

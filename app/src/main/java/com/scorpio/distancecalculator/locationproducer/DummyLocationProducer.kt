@@ -3,7 +3,6 @@ package com.scorpio.distancecalculator.locationproducer
 import com.scorpio.distancecalculator.MLocation
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
@@ -11,8 +10,10 @@ import kotlinx.coroutines.launch
 class DummyLocationProducer : MLocationProducer {
     var dummyJob: Job? = null
 
-    override fun startLocationUpdates(): Flow<MLocation> = callbackFlow {
-        dummyJob = launch {
+    override fun startLocationUpdates(): Flow<MLocation> =
+        callbackFlow {
+            dummyJob =
+                launch {
 //            val dummyLocations = LOC.values()
 //            while (true) {
 //                dummyLocations.forEach { loc ->
@@ -20,12 +21,12 @@ class DummyLocationProducer : MLocationProducer {
 //                    delay(1000)
 //                }
 //            }
-        }
+                }
 
-        awaitClose {
-            dummyJob?.cancel()
+            awaitClose {
+                dummyJob?.cancel()
+            }
         }
-    }
 
     override fun pauseLocationUpdates() {
         dummyJob?.cancel()

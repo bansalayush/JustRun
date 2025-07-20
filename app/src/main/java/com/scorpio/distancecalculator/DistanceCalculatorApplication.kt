@@ -12,8 +12,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.scorpio.distancecalculator.db.AppDatabase
@@ -27,10 +25,7 @@ import timber.log.Timber
 import java.time.Duration.ofHours
 import java.util.UUID
 import java.util.concurrent.TimeUnit
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.hours
 import kotlin.time.measureTime
-import kotlin.time.measureTimedValue
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -45,17 +40,20 @@ class DistanceCalculatorApplication : Application() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
         mContext = this
-        println(measureTime {
-            database
-        })
+        println(
+            measureTime {
+                database
+            },
+        )
 
-        //todo: move this to a helper class 
+        // todo: move this to a helper class
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                "running-channel",
-                "Running Notifications",
-                NotificationManager.IMPORTANCE_MIN
-            )
+            val channel =
+                NotificationChannel(
+                    "running-channel",
+                    "Running Notifications",
+                    NotificationManager.IMPORTANCE_MIN,
+                )
             val notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
@@ -63,9 +61,10 @@ class DistanceCalculatorApplication : Application() {
 
         appScope.launch(Dispatchers.IO) {
             val key = stringPreferencesKey("db_cleanup_work_id")
-            val value = dataStore.data.map { prefs ->
-                prefs[key]
-            }.first()
+            val value =
+                dataStore.data.map { prefs ->
+                    prefs[key]
+                }.first()
             Timber.tag("CleanupWork-SETUP").d(value)
             if (value.isNullOrEmpty()) {
                 this@DistanceCalculatorApplication.dataStore.edit { prefs ->
@@ -76,13 +75,11 @@ class DistanceCalculatorApplication : Application() {
                         .enqueueUniquePeriodicWork(
                             DbCleanupWork.WORK_NAME,
                             ExistingPeriodicWorkPolicy.KEEP,
-                            work
+                            work,
                         )
                 }
             }
         }
-
-
     }
 
     companion object {

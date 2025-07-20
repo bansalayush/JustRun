@@ -12,16 +12,16 @@ import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandFini
 import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandPause
 import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandResume
 import com.scorpio.distancecalculator.tracker.TrackerProvider
+import com.scorpio.logger.LoggerProvider
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class RunningService : LifecycleService() {
-
     private lateinit var currentNotification: NotificationCompat.Builder
     private lateinit var notificationManager: NotificationManager
-    private var notificationUpdateJob_1: Job? = null
-    private var notificationUpdateJob_2: Job? = null
+    private var notificationUpdateJob1: Job? = null
+    private var notificationUpdateJob2: Job? = null
 
     private val app by lazy { application as DistanceCalculatorApplication }
     private val runningTracker by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -33,12 +33,17 @@ class RunningService : LifecycleService() {
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int,
+    ): Int {
         intent?.action?.let {
             println("Running Service received action: $it")
             when (it) {
                 TrackerCommandResume.toString() -> {
                     lifecycleScope.launch {
+                        LoggerProvider.getLogger().logEvent(RUNNING_SERVICE_STARTED)
                         runningTracker.resume()
                     }
                     handleNotification(it)
@@ -46,6 +51,7 @@ class RunningService : LifecycleService() {
 
                 TrackerCommandPause.toString() -> {
                     lifecycleScope.launch {
+                        LoggerProvider.getLogger().logEvent(RUNNING_SERVICE_PAUSED)
                         runningTracker.pause()
                     }
                     handleNotification(it)
@@ -55,10 +61,10 @@ class RunningService : LifecycleService() {
                     lifecycleScope.launch {
                         val activityUUID = runningTracker.finish()
 
-                        notificationUpdateJob_1?.cancel()
-                        notificationUpdateJob_2?.cancel()
+                        notificationUpdateJob1?.cancel()
+                        notificationUpdateJob2?.cancel()
                         notificationManager.cancel(1)
-                        //send a signal to mainactivity to calculate the final distance and elapsed time
+                        // send a signal to mainactivity to calculate the final distance and elapsed time
                         stopForeground(STOP_FOREGROUND_REMOVE)
                         stopSelf()
                     }
@@ -72,40 +78,48 @@ class RunningService : LifecycleService() {
     }
 
     fun handleNotification(string: String) {
-        currentNotification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("JustRun")
-            .setAutoCancel(false)
-            .setContentIntent(getMainActivityIntent())
-            .setOngoing(true)
+        currentNotification =
+            NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("JustRun")
+                .setAutoCancel(false)
+                .setContentIntent(getMainActivityIntent())
+                .setOngoing(true)
         startForeground(1, currentNotification.build())
         updateNotification()
     }
 
     private fun updateNotification() {
-        notificationUpdateJob_1 = lifecycleScope.launch {
-            runningTracker.distanceFlow.collectLatest {
-                val distance = formatDistanceToKmSimple(it)
-                currentNotification.setContentTitle(
-                    "Distance $distance(kms)"
-                )
-                notificationManager.notify(1, currentNotification.build())
+        notificationUpdateJob1 =
+            lifecycleScope.launch {
+                runningTracker.distanceFlow.collectLatest {
+                    val distance = formatDistanceToKmSimple(it)
+                    currentNotification.setContentTitle(
+                        "Distance $distance(kms)",
+                    )
+                    notificationManager.notify(1, currentNotification.build())
+                }
             }
-        }
-        notificationUpdateJob_2 = lifecycleScope.launch {
-            runningTracker.elapsedTimeFlow.collectLatest {
-                val elapsedTime = formatDuration(it)
-                currentNotification.setContentText(
-                    "Elapsed-Time $elapsedTime(mm:ss)"
-                )
-                notificationManager.notify(1, currentNotification.build())
+        notificationUpdateJob2 =
+            lifecycleScope.launch {
+                runningTracker.elapsedTimeFlow.collectLatest {
+                    val elapsedTime = formatDuration(it)
+                    currentNotification.setContentText(
+                        "Elapsed-Time $elapsedTime(mm:ss)",
+                    )
+                    notificationManager.notify(1, currentNotification.build())
+                }
             }
-        }
     }
 
     private fun getMainActivityIntent(): PendingIntent {
-        return PendingIntent.getActivity(this, 143, Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-        }, PendingIntent.FLAG_IMMUTABLE)
+        return PendingIntent.getActivity(
+            this,
+            143,
+            Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            },
+            PendingIntent.FLAG_IMMUTABLE,
+        )
     }
 }

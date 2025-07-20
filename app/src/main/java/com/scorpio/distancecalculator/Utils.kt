@@ -35,7 +35,7 @@ fun calculateFinalTimeAndDistance(latestLocations: List<LocationEntity>): Pair<F
             start.longitude,
             end.latitude,
             end.longitude,
-            distance
+            distance,
         )
         totalTime += (end.timestamp - start.timestamp)
         totalDistance += distance[0]

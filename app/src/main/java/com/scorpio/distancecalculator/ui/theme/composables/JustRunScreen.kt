@@ -57,7 +57,7 @@ fun ControlsLayout(viewmodel: MainViewModel) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         when (trackingState.value) {
             TrackingStateFinished -> {
@@ -72,7 +72,7 @@ fun ControlsLayout(viewmodel: MainViewModel) {
                         icon = Icons.Default.PlayArrow,
                         text = "START",
                         backgroundColor = Color(0xFF4CAF50),
-                        size = 120.dp
+                        size = 120.dp,
                     )
                 }
             }
@@ -89,7 +89,7 @@ fun ControlsLayout(viewmodel: MainViewModel) {
                         icon = null,
                         text = "PAUSE",
                         backgroundColor = Color(0xFFFFC107),
-                        size = 120.dp
+                        size = 120.dp,
                     )
                 }
             }
@@ -98,7 +98,7 @@ fun ControlsLayout(viewmodel: MainViewModel) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     AnimatedControlButton(
                         onClick = {
@@ -109,7 +109,7 @@ fun ControlsLayout(viewmodel: MainViewModel) {
                         icon = null,
                         text = "FINISH",
                         backgroundColor = Color(0xFFF44336),
-                        size = 100.dp
+                        size = 100.dp,
                     )
 
                     AnimatedControlButton(
@@ -121,7 +121,7 @@ fun ControlsLayout(viewmodel: MainViewModel) {
                         icon = Icons.Default.PlayArrow,
                         text = "RESUME",
                         backgroundColor = Color(0xFF4CAF50),
-                        size = 100.dp
+                        size = 100.dp,
                     )
                 }
             }
@@ -136,7 +136,7 @@ fun AnimatedControlButton(
     text: String,
     backgroundColor: Color,
     size: androidx.compose.ui.unit.Dp,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -144,81 +144,85 @@ fun AnimatedControlButton(
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.9f else 1f,
         animationSpec = tween(100),
-        label = "scale"
+        label = "scale",
     )
 
     val shadowElevation by animateFloatAsState(
         targetValue = if (isPressed) 2.dp.value else 8.dp.value,
         animationSpec = tween(100),
-        label = "shadow"
+        label = "shadow",
     )
 
     Box(
-        modifier = modifier
-            .size(size)
-            .scale(scale)
-            .shadow(
-                elevation = shadowElevation.dp,
-                shape = CircleShape,
-                clip = false
-            )
-            .background(backgroundColor, CircleShape)
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null
-            ) { onClick() },
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .size(size)
+                .scale(scale)
+                .shadow(
+                    elevation = shadowElevation.dp,
+                    shape = CircleShape,
+                    clip = false,
+                )
+                .background(backgroundColor, CircleShape)
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                ) { onClick() },
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
-            if (icon != null)
+            if (icon != null) {
                 Icon(
                     imageVector = icon,
                     contentDescription = text,
                     tint = Color.White,
-                    modifier = Modifier.size(size * 0.4f)
+                    modifier = Modifier.size(size * 0.4f),
                 )
+            }
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = text,
                 color = Color.White,
                 fontSize = (size.value * 0.12f).sp,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }
 }
-
 
 @Composable
 fun DistanceMetricDisplay(viewModel: MainViewModel) {
     val distance by viewModel.distanceFlow.collectAsStateWithLifecycle("0.00")
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 24.dp, horizontal = 16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 24.dp, horizontal = 16.dp),
         ) {
             Text(
                 text = distance,
                 fontSize = 72.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.displayLarge
+                style = MaterialTheme.typography.displayLarge,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -226,12 +230,12 @@ fun DistanceMetricDisplay(viewModel: MainViewModel) {
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                letterSpacing = 1.5.sp
+                letterSpacing = 1.5.sp,
             )
             Text(
                 text = "kilometers",
                 fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
             )
         }
     }
@@ -242,27 +246,30 @@ fun TimeMetricDisplay(viewModel: MainViewModel) {
     val time by viewModel.elapsedTimeFlow.collectAsStateWithLifecycle("00:00")
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 20.dp, horizontal = 16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 20.dp, horizontal = 16.dp),
         ) {
             Text(
                 text = time.toString(),
                 fontSize = 56.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
-                style = MaterialTheme.typography.displayMedium
+                style = MaterialTheme.typography.displayMedium,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
@@ -270,12 +277,12 @@ fun TimeMetricDisplay(viewModel: MainViewModel) {
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
-                letterSpacing = 1.5.sp
+                letterSpacing = 1.5.sp,
             )
             Text(
                 text = "mm:ss",
                 fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
+                color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f),
             )
         }
     }

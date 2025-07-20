@@ -23,19 +23,21 @@ class MainViewModel : ViewModel() {
     }
 
     val speedStateFlow: Flow<Float> = runningTracker.speedStateFlow
-    val distanceFlow: Flow<String> = runningTracker.distanceFlow.map {
-        formatDistanceToKmSimple(it)
-    }
-    val elapsedTimeFlow: Flow<String> = runningTracker.elapsedTimeFlow.map {
-        formatDuration(it)
-    }
+    val distanceFlow: Flow<String> =
+        runningTracker.distanceFlow.map {
+            formatDistanceToKmSimple(it)
+        }
+    val elapsedTimeFlow: Flow<String> =
+        runningTracker.elapsedTimeFlow.map {
+            formatDuration(it)
+        }
     val trackingState: Flow<TrackingState> = runningTracker.trackingState
 
-    //this logic can break, WHY ?
-    //in meantime if someone calls runningTracker.resume then the value of currentActivityUUID will change
-    //check this angle once
+    // this logic can break, WHY ?
+    // in meantime if someone calls runningTracker.resume then the value of currentActivityUUID will change
+    // check this angle once
 
-    //another way could be we get a return value from finish function . We send that data from Service via EventBus to ViewModel
+    // another way could be we get a return value from finish function . We send that data from Service via EventBus to ViewModel
     init {
         viewModelScope.launch {
             trackingState.collectLatest {
@@ -46,7 +48,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    //create separate class ActivityDataAggregator to aggregate and put final data in a separate table
+    // create separate class ActivityDataAggregator to aggregate and put final data in a separate table
     private fun makeFinalCalculations(activityID: Long) {
         viewModelScope.launch {
             calculateFinalTimeAndDistance(locationDao.getLocationsByActivityId(activityID))
@@ -68,5 +70,4 @@ class MainViewModel : ViewModel() {
 
         return String.format("%02d:%02d", minutes, seconds)
     }
-
 }

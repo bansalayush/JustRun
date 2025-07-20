@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
 class DefaultLocationProducer(
-    private val actualProvider: FusedLocationProviderClient
+    private val actualProvider: FusedLocationProviderClient,
 ) : MLocationProducer {
     private var locationCallback: LocationCallback? = null
 
@@ -26,31 +26,33 @@ class DefaultLocationProducer(
     }
 
     @SuppressLint("MissingPermission")
-    override fun startLocationUpdates(): Flow<MLocation> = callbackFlow {
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-                val locations = locationResult.locations
-                for (location in locations) {
-                    val latitude = location.latitude
-                    val longitude = location.longitude
-                    Log.d(TAG, "Location received: $latitude, $longitude speed:${location.speed}")
-                    trySend(MLocation(latitude, longitude))
+    override fun startLocationUpdates(): Flow<MLocation> =
+        callbackFlow {
+            locationCallback =
+                object : LocationCallback() {
+                    override fun onLocationResult(locationResult: LocationResult) {
+                        super.onLocationResult(locationResult)
+                        val locations = locationResult.locations
+                        for (location in locations) {
+                            val latitude = location.latitude
+                            val longitude = location.longitude
+                            Log.d(TAG, "Location received: $latitude, $longitude speed:${location.speed}")
+                            trySend(MLocation(latitude, longitude))
+                        }
+                    }
                 }
+            locationCallback?.let {
+                actualProvider.requestLocationUpdates(
+                    locationRequest,
+                    it,
+                    Looper.getMainLooper(),
+                )
+            }
+
+            awaitClose {
+                removeLocationCallback()
             }
         }
-        locationCallback?.let {
-            actualProvider.requestLocationUpdates(
-                locationRequest,
-                it,
-                Looper.getMainLooper()
-            )
-        }
-
-        awaitClose {
-            removeLocationCallback()
-        }
-    }
 
     override fun pauseLocationUpdates() {
         removeLocationCallback()

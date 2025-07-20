@@ -10,5 +10,5 @@ data class LocationEntity(
     val latitude: Double,
     val longitude: Double,
     val timestamp: Long = System.currentTimeMillis(),
-    val activityId: Long
+    val activityId: Long,
 )

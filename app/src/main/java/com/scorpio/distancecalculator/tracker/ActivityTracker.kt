@@ -5,11 +5,11 @@ import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStateFinishe
 import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStatePaused
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
 
 abstract class ActivityTracker : Tracker {

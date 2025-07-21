@@ -14,7 +14,8 @@ interface LocationDao {
     suspend fun getLocationsByActivityId(currentActivityId: Long): List<LocationEntity>
 
     @Query(
-        "SELECT * FROM  locations_table WHERE timestamp>:lastTimestamp AND activityId=:currentActivityId ORDER BY timestamp ASC LIMIT 10 ",
+        "SELECT * FROM  locations_table WHERE timestamp>:lastTimestamp " +
+            "AND activityId=:currentActivityId ORDER BY timestamp ASC LIMIT 10 ",
     )
     fun getLastTenLocationsSync(
         lastTimestamp: Long,

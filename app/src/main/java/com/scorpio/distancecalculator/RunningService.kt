@@ -12,7 +12,6 @@ import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandFini
 import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandPause
 import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandResume
 import com.scorpio.distancecalculator.tracker.TrackerProvider
-import com.scorpio.logger.LoggerProvider
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -23,7 +22,6 @@ class RunningService : LifecycleService() {
     private var notificationUpdateJob1: Job? = null
     private var notificationUpdateJob2: Job? = null
 
-    private val app by lazy { application as DistanceCalculatorApplication }
     private val runningTracker by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
         TrackerProvider.getTracker(this)
     }
@@ -43,24 +41,23 @@ class RunningService : LifecycleService() {
             when (it) {
                 TrackerCommandResume.toString() -> {
                     lifecycleScope.launch {
-                        LoggerProvider.getLogger().logEvent(RUNNING_SERVICE_STARTED)
+//                        LoggerProvider.getLogger().logEvent(RUNNING_SERVICE_STARTED)
                         runningTracker.resume()
                     }
-                    handleNotification(it)
+                    handleNotification()
                 }
 
                 TrackerCommandPause.toString() -> {
                     lifecycleScope.launch {
-                        LoggerProvider.getLogger().logEvent(RUNNING_SERVICE_PAUSED)
+//                        LoggerProvider.getLogger().logEvent(RUNNING_SERVICE_PAUSED)
                         runningTracker.pause()
                     }
-                    handleNotification(it)
+                    handleNotification()
                 }
 
                 TrackerCommandFinish.toString() -> {
                     lifecycleScope.launch {
-                        val activityUUID = runningTracker.finish()
-
+                        runningTracker.finish()
                         notificationUpdateJob1?.cancel()
                         notificationUpdateJob2?.cancel()
                         notificationManager.cancel(1)
@@ -77,7 +74,7 @@ class RunningService : LifecycleService() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    fun handleNotification(string: String) {
+    fun handleNotification() {
         currentNotification =
             NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)

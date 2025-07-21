@@ -35,12 +35,14 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.scorpio.distancecalculator.MainViewModel
+import com.scorpio.distancecalculator.R
 import com.scorpio.distancecalculator.RunningService
 import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandFinish
 import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandPause
@@ -86,7 +88,7 @@ fun ControlsLayout(viewmodel: MainViewModel) {
                                 action = TrackerCommandPause.toString()
                             }.also { context.startService(it) }
                         },
-                        icon = null,
+                        icon = ImageVector.vectorResource(id = R.drawable.pause_icon),
                         text = "PAUSE",
                         backgroundColor = Color(0xFFFFC107),
                         size = 120.dp,
@@ -106,7 +108,7 @@ fun ControlsLayout(viewmodel: MainViewModel) {
                                 action = TrackerCommandFinish.toString()
                             }.also { context.startService(it) }
                         },
-                        icon = null,
+                        icon = ImageVector.vectorResource(id = R.drawable.stop_icon),
                         text = "FINISH",
                         backgroundColor = Color(0xFFF44336),
                         size = 100.dp,
@@ -132,7 +134,7 @@ fun ControlsLayout(viewmodel: MainViewModel) {
 @Composable
 fun AnimatedControlButton(
     onClick: () -> Unit,
-    icon: ImageVector?,
+    icon: ImageVector,
     text: String,
     backgroundColor: Color,
     size: androidx.compose.ui.unit.Dp,

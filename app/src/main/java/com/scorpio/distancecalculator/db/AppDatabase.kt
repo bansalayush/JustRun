@@ -12,13 +12,13 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
         // Volatile to ensure atomic access to the variable
         @Volatile
-        private var INSTANCE: AppDatabase? = null
+        private var instance: AppDatabase? = null
         private const val DATABASE_NAME = "locations" // Database file name
 
         fun getDatabase(context: Context): AppDatabase {
-            // If the INSTANCE is not null, then return it,
+            // If the instance is not null, then return it,
             // if it is, then create the database
-            return INSTANCE ?: synchronized(this) {
+            return instance ?: synchronized(this) {
                 val instance =
                     Room.databaseBuilder(
                         context.applicationContext,
@@ -29,7 +29,7 @@ abstract class AppDatabase : RoomDatabase() {
                         // Migration is not covered in this basic example.
                         .fallbackToDestructiveMigration() // Use with caution for production apps
                         .build()
-                INSTANCE = instance
+                Companion.instance = instance
                 // return instance
                 instance
             }

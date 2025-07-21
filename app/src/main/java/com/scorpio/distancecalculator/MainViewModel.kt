@@ -37,7 +37,8 @@ class MainViewModel : ViewModel() {
     // in meantime if someone calls runningTracker.resume then the value of currentActivityUUID will change
     // check this angle once
 
-    // another way could be we get a return value from finish function . We send that data from Service via EventBus to ViewModel
+    // another way could be we get a return value from finish function .
+    // We send that data from Service via EventBus to ViewModel
     init {
         viewModelScope.launch {
             trackingState.collectLatest {

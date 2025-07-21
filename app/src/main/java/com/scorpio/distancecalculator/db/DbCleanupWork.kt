@@ -6,10 +6,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.scorpio.distancecalculator.WORKER_ENDED
-import com.scorpio.distancecalculator.WORKER_STARTED
 import com.scorpio.distancecalculator.dataStore
-import timber.log.Timber
+// import com.scorpio.logger.LoggerProvider
 
 class DbCleanupWork(
     private val appContext: Context,
@@ -18,6 +16,8 @@ class DbCleanupWork(
     private val workerExecutedAtKey = stringPreferencesKey("worker_executed_at")
 
     override suspend fun doWork(): Result {
+//        LoggerProvider.getLogger().logEvent(WORKER_STARTED)
+
         appContext.dataStore.edit { prefs ->
             // last executed time comes on top
             prefs[workerExecutedAtKey] =
@@ -25,6 +25,8 @@ class DbCleanupWork(
         }
 
         println("Running DB cleanup work")
+
+//        LoggerProvider.getLogger().logEvent(WORKER_ENDED)
         return Result.success()
     }
 

@@ -1,4 +1,4 @@
-[![Android CI](https://github.com/bansalayush/JustRun/actions/workflows/build.yml/badge.svg)](https://github.com/bansalayush/JustRun/actions/workflows/build.yml)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/bansalayush/JustRun/android.yml)](https://github.com/bansalayush/JustRun/actions/workflows/android.yml)
 [![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?logo=android&logoColor=white)](https://www.android.com/)
 [![Language](https://img.shields.io/badge/Language-Kotlin-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)

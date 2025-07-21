@@ -35,7 +35,7 @@ abstract class ActivityTracker : Tracker {
         elapsedTimeJob =
             scope.launch {
                 while (true) {
-                    delay(1000)
+                    delay(TICKER_1000)
                     _elapsedTimeFlow.update { it + 1 }
                 }
             }

@@ -112,11 +112,15 @@ class RunningService : LifecycleService() {
     private fun getMainActivityIntent(): PendingIntent {
         return PendingIntent.getActivity(
             this,
-            143,
+            LAUNCH_MAINACTIIVTY_PENDING_INTENT_REQUEST_CODE,
             Intent(this, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             },
             PendingIntent.FLAG_IMMUTABLE,
         )
+    }
+
+    companion object {
+        const val LAUNCH_MAINACTIIVTY_PENDING_INTENT_REQUEST_CODE = 143
     }
 }

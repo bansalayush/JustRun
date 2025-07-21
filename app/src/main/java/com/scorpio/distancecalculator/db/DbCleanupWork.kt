@@ -1,7 +1,6 @@
 package com.scorpio.distancecalculator.db
 
 import android.content.Context
-import androidx.datastore.dataStore
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.work.CoroutineWorker
@@ -32,5 +31,6 @@ class DbCleanupWork(
 
     companion object {
         const val WORK_NAME = "DbCleanupWork"
+        const val CLEANUP_WORK_REPEAT_INTERVAL = 20L
     }
 }

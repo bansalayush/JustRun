@@ -5,7 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -16,14 +15,13 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.scorpio.distancecalculator.db.AppDatabase
 import com.scorpio.distancecalculator.db.DbCleanupWork
+import com.scorpio.distancecalculator.db.DbCleanupWork.Companion.CLEANUP_WORK_REPEAT_INTERVAL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.Duration.ofHours
-import java.util.UUID
 import java.util.concurrent.TimeUnit
 import kotlin.time.measureTime
 
@@ -69,7 +67,10 @@ class DistanceCalculatorApplication : Application() {
             if (value.isNullOrEmpty()) {
                 this@DistanceCalculatorApplication.dataStore.edit { prefs ->
                     val work =
-                        PeriodicWorkRequestBuilder<DbCleanupWork>(20, TimeUnit.MINUTES).build()
+                        PeriodicWorkRequestBuilder<DbCleanupWork>(
+                            CLEANUP_WORK_REPEAT_INTERVAL,
+                            TimeUnit.MINUTES,
+                        ).build()
                     prefs[key] = work.id.toString()
                     WorkManager.getInstance(this@DistanceCalculatorApplication)
                         .enqueueUniquePeriodicWork(

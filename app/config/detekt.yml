@@ -12,6 +12,8 @@ style:
     active: true
     ignorePropertyDeclaration: true
     ignoreAnnotation: true
+    ignoreAnnotated:
+      - "androidx.compose.runtime.Composable"
     ignoreEnums: true
     ignoreNumbers: ['-1', '0', '1', '2']
   MaxLineLength:

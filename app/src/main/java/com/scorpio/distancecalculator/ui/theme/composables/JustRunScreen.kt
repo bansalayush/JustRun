@@ -51,6 +51,7 @@ import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStateActive
 import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStateFinished
 import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStatePaused
 
+@Suppress("LongMethod")
 @Composable
 fun ControlsLayout(viewmodel: MainViewModel) {
     val trackingState = viewmodel.trackingState.collectAsStateWithLifecycle(TrackingStateFinished)
@@ -131,6 +132,7 @@ fun ControlsLayout(viewmodel: MainViewModel) {
     }
 }
 
+@Suppress("LongParameterList")
 @Composable
 fun AnimatedControlButton(
     onClick: () -> Unit,

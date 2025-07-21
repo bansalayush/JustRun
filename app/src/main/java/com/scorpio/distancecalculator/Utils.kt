@@ -4,19 +4,22 @@ import android.location.Location
 import com.scorpio.distancecalculator.db.LocationEntity
 import kotlin.time.Duration.Companion.seconds
 
+const val M_TO_KM = 1000.0
+const val SIXTY = 60
+
+@Suppress("ImplicitDefaultLocale")
 inline fun formatDuration(totalSeconds: Long): String {
     if (totalSeconds < 0) return "00:00:00"
-
     val duration = totalSeconds.seconds
-    val minutes = duration.inWholeMinutes % 60
-    val seconds = duration.inWholeSeconds % 60
-
+    val minutes = duration.inWholeMinutes % SIXTY
+    val seconds = duration.inWholeSeconds % SIXTY
     return String.format("%02d:%02d", minutes, seconds)
 }
 
+@Suppress("ImplicitDefaultLocale")
 inline fun formatDistanceToKmSimple(totalMeters: Float): String {
     if (totalMeters < 0) return "0.00"
-    val kilometers = totalMeters / 1000.0
+    val kilometers = totalMeters / M_TO_KM
     return String.format("%.2f", kilometers) // Formats to 2 decimal places
 }
 

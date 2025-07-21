@@ -1,3 +1,4 @@
+[![Android CI](https://github.com/bansalayush/JustRun/actions/workflows/build.yml/badge.svg)](https://github.com/bansalayush/JustRun/actions/workflows/build.yml)
 [![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?logo=android&logoColor=white)](https://www.android.com/)
 [![Language](https://img.shields.io/badge/Language-Kotlin-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -16,6 +17,13 @@ Run, track, achieve! Your essential app for logging distance and time on every r
     <td><img src="screenshots/screen_1.png" alt="Screen 1" width="250"></td>
   </tr>
 </table>
+
+## todo features
+- [ ] final distance calculation and a list page for all activities
+- [ ] remove notification and stop RunningService in case there's no running activity and user closes the app
+- [ ] show past activities
+- [ ] export data as a csv
+- [ ] add different screen options
 
 ## License
 MIT License. See `LICENSE` for details.

@@ -1,71 +1,21 @@
-# Distance Calculator - Running Tracker
-
-A simple Android app to track running activities, calculate distance, and monitor speed using device location.
+[![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?logo=android&logoColor=white)](https://www.android.com/)
+[![Language](https://img.shields.io/badge/Language-Kotlin-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+# JustRun - Running Tracker
+Run, track, achieve! Your essential app for logging distance and time on every run and jog.
 
 ## Features
+- **Real-time Tracking**: See your distance and time updated instantly during your activity.
+- **Live Notifications**: Get key updates on your progress directly from your notification bar, so you can stay informed without interrupting your stride.
 
-- Start, pause, resume, and finish tracking your run
-- Calculates total distance covered using GPS
-- Displays current speed based on distance and elapsed time
-- Stores location data locally
-
-## Tech Stack
-
-- Kotlin
-- Android Jetpack Compose
-- Coroutines & StateFlow
-- Room (for local data storage)
-
-## Getting Started
-
-1. **Clone the repository:**
-2. **Open in Android Studio:**
-   - Open the project in Android Studio (2025.1.1 or later recommended).
-
-3. **Build & Run:**
-   - Connect an Android device or use an emulator.
-   - Click **Run**.
-
-## Project Structure
-
-- `app/src/main/java/com/scorpio/distancecalculator/`
-  - `tracker/RunningTracker.kt` - Core tracking logic
-  - `locationproducer/` - Location update provider
-  - `LocationDao`, `LocationEntity` - Local database entities and access
-
-## Usage
-
-- Tap **START** to begin tracking.
-- Tap **PAUSE** to pause tracking.
-- Tap **RESUME** to continue.
-- Tap **FINISH** to end and reset the session.
-
-
-# TODO
-
-- [ ] Setup CI/CD
-  - [ ] Build
-  - [ ] Test
-  - [ ] Lint
-- write unit test cases for `RunningTracker.kt`
-- [ ] Change to a more user-friendly UI
-- [ ] Add Hilt for Dependency Injection
-- [x] Organize dependency versions in `libs.toml.version`
-- [ ] optimize queries to database for location data @RunningTracker.kt#startDistanceCalculation:L56
-- [x] use Foreground service for location updates and calculation 
-- [ ] add WorkManager to periodically delete data
-  - [ ] delete old activity data when db size is above a specific threshold
-  - [x] Trigger a workmanager to trigger periodic work
-  - [x] add a logger to log when the work manager was triggered, using Datastore
-- [ ] final distance calculation and a list page for all activities 
-  - [ ] plan this with a new table addition to practise DB migration or addition
-- [ ] remove notification and stop RunningService in case there's no running activity and user closes the app
-- [ ] Logging Module
-  - [ ] abstract Logger
-  - [ ] Event Logger (firebase,mixpanel)
-  - [ ] Event Logger (file based, till we don't integrate mixpanel)
-    - [ ] debug view for these events 
+## Screenshots
+<table>
+  <tr>
+    <td><img src="screenshots/screen_3.png" alt="Screen 3" width="250"></td>
+    <td><img src="screenshots/screen_2.png" alt="Screen 2" width="250"></td>
+    <td><img src="screenshots/screen_1.png" alt="Screen 1" width="250"></td>
+  </tr>
+</table>
 
 ## License
-
 MIT License. See `LICENSE` for details.

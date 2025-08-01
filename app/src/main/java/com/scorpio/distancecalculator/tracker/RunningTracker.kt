@@ -22,21 +22,10 @@ class RunningTracker(
     private var distanceCalculationJob: Job? = null
 
     private val distanceMutableFlow = MutableStateFlow(0f)
+    private val speedMutableFlow = MutableStateFlow(0.0)
     val distanceFlow: StateFlow<Float> = distanceMutableFlow
 
-//    val speedStateFlow: StateFlow<Float> =
-//        combine(
-//            distanceMutableFlow,
-//            elapsedTimeFlow,
-//        ) { distance, time ->
-//            val distanceInKms = distance / 1000f
-//            val timeInHrs = time / 3600f
-//            if (timeInHrs != 0f) distanceInKms / timeInHrs else 0f
-//        }.stateIn(
-//            scope,
-//            SharingStarted.WhileSubscribed(300),
-//            0f,
-//        )
+    val speedStateFlow: StateFlow<Double> = speedMutableFlow
 
     private var lastTimestamp: Long = 0
 
@@ -46,6 +35,7 @@ class RunningTracker(
         locationTrackingJob =
             scope.launch {
                 locationProducer.startLocationUpdates().collectLatest { location ->
+//                    speedMutableFlow.value = location.speed
                     locationDao.insertLocation(location.toEntity(currentActivityUUID))
                     startDistanceCalculation()
                 }

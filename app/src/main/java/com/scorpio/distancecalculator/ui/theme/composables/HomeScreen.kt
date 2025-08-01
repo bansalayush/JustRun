@@ -24,47 +24,50 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.scorpio.distancecalculator.MainViewModel
 
-
-val listOfActivities = listOf<String>(
-    "Running",
-    "Cycling",
-    "Walking",
-    "Hiking",
-    "Swimming",
-    "Yoga",
-    "Dancing",
-    "Weightlifting",
-    "Pilates",
-    "Crossfit",
-    "Running",
-    "Cycling",
-    "Walking",
-    "Hiking",
-    "Swimming",
-    "Yoga",
-    "Dancing",
-    "Weightlifting",
-    "Pilates",
-    "Crossfit",
-    "Running",
-    "Cycling",
-    "Walking",
-    "Hiking",
-    "Swimming",
-    "Yoga",
-    "Dancing",
-    "Weightlifting",
-    "Pilates",
-    "Crossfit"
-
-)
+val listOfActivities =
+    listOf<String>(
+        "Running",
+        "Cycling",
+        "Walking",
+        "Hiking",
+        "Swimming",
+        "Yoga",
+        "Dancing",
+        "Weightlifting",
+        "Pilates",
+        "Crossfit",
+        "Running",
+        "Cycling",
+        "Walking",
+        "Hiking",
+        "Swimming",
+        "Yoga",
+        "Dancing",
+        "Weightlifting",
+        "Pilates",
+        "Crossfit",
+        "Running",
+        "Cycling",
+        "Walking",
+        "Hiking",
+        "Swimming",
+        "Yoga",
+        "Dancing",
+        "Weightlifting",
+        "Pilates",
+        "Crossfit",
+    )
 
 @Composable
-fun HomeScreen(viewModel: MainViewModel, navController: NavHostController) {
+fun HomeScreen(
+    viewModel: MainViewModel,
+    navController: NavHostController,
+) {
     Box(modifier = Modifier.fillMaxSize()) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier =
+                Modifier
+                    .fillMaxSize(),
         ) {
             LazyColumn {
                 items(
@@ -72,60 +75,61 @@ fun HomeScreen(viewModel: MainViewModel, navController: NavHostController) {
                     itemContent = {
                         Text(
                             text = listOfActivities[it],
-
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(16.dp),
                         )
-                    }, key = { index -> index })
+                    },
+                    key = { index -> index },
+                )
             }
         }
         FloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(12.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(12.dp),
             onClick = {
                 navController.navigate(Screen.Tracker.route)
-            }
+            },
         ) {
             Text("+")
         }
     }
 }
 
-//Background: #FAFAFA
-//Cards: #F8F8F8
-//Primary Text: #2C2C2C
-//Secondary Text: #666666
-//Borders: #E0E0E0
-//Icons: #8A8A8A
-const val borderColor = 0xFFE0E0E0
+// Background: #FAFAFA
+// Cards: #F8F8F8
+// Primary Text: #2C2C2C
+// Secondary Text: #666666
+// Borders: #E0E0E0
+// Icons: #8A8A8A
 
 @Preview
 @Composable
 fun ActivityItem(modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(88.dp)
-            .background(Color.Blue)
-            .padding(horizontal = 16.dp, vertical = 20.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(88.dp)
+                .background(Color.Blue)
+                .padding(horizontal = 16.dp, vertical = 20.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            modifier = Modifier
-                .width(48.dp)
-                .height(48.dp)
-                .background(Color.Transparent)
-                .border(2.dp, Color(borderColor))
+            modifier =
+                Modifier
+                    .width(48.dp)
+                    .height(48.dp)
+                    .background(Color.Transparent)
+                    .border(2.dp, Color(0xFFE0E0E0)),
         )
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
         ) {
 //            Text()
-
         }
-
     }
-
 }

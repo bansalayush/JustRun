@@ -27,6 +27,7 @@ import kotlin.time.measureTime
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
+@Suppress("InjectDispatcher")
 class DistanceCalculatorApplication : Application() {
     val database: AppDatabase by lazy {
         AppDatabase.getDatabase(this)

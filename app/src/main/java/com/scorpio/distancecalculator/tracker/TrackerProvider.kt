@@ -6,6 +6,7 @@ import com.scorpio.distancecalculator.db.AppDatabase
 import com.scorpio.distancecalculator.locationproducer.DefaultLocationProducer
 
 // to make this DI compatible move the DefaultLocationProducer, AppDatabase as constructor injectables
+@Suppress("NoNameShadowing")
 object TrackerProvider {
     @Volatile
     private var instance: RunningTracker? = null

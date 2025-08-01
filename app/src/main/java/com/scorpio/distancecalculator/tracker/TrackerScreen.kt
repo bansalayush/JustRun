@@ -32,6 +32,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -48,6 +49,7 @@ fun Dp.toSp(): androidx.compose.ui.unit.TextUnit {
     return with(density) { toPx() / density.density }.sp
 }
 
+@Suppress("LongMethod")
 @Composable
 fun RunStatsScreen(
     viewModel: MainViewModel,
@@ -166,14 +168,15 @@ fun RunStatsScreen(
     }
 }
 
+@Suppress("LongParameterList")
 @Composable
 fun StatBlock(
     label: String,
     value: String,
     unit: String? = null,
-    labelText: androidx.compose.ui.unit.TextUnit,
-    bigText: androidx.compose.ui.unit.TextUnit,
-    unitText: androidx.compose.ui.unit.TextUnit? = null,
+    labelText: TextUnit,
+    bigText: TextUnit,
+    unitText: TextUnit? = null,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.scorpio.distancecalculator.MainViewModel
 
 val listOfActivities =
     listOf<String>(
@@ -59,10 +58,7 @@ val listOfActivities =
     )
 
 @Composable
-fun HomeScreen(
-    viewModel: MainViewModel,
-    navController: NavHostController,
-) {
+fun HomeScreen(navController: NavHostController) {
     Box(modifier = Modifier.fillMaxSize()) {
         Box(
             modifier =
@@ -105,7 +101,7 @@ fun HomeScreen(
 
 @Preview
 @Composable
-fun ActivityItem(modifier: Modifier = Modifier) {
+fun ActivityItem() {
     Row(
         modifier =
             Modifier

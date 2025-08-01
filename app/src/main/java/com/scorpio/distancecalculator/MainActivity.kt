@@ -29,6 +29,7 @@ import com.scorpio.distancecalculator.ui.theme.composables.HomeScreen
 import com.scorpio.distancecalculator.ui.theme.composables.Screen
 import timber.log.Timber
 
+@Suppress("LongMethod")
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<MainViewModel>()
 
@@ -61,7 +62,6 @@ class MainActivity : ComponentActivity() {
                                 ) {
                                     composable(Screen.Home.route) {
                                         HomeScreen(
-                                            viewModel = viewModel,
                                             navController = navController,
                                         )
                                     }

@@ -15,9 +15,8 @@ import kotlinx.coroutines.launch
 class RunningTracker(
     private val locationProducer: MLocationProducer,
     private val locationDao: LocationDao,
+    override val scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
 ) : ActivityTracker() {
-    override val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
-
     private var locationTrackingJob: Job? = null
     private var distanceCalculationJob: Job? = null
 

@@ -12,9 +12,9 @@ Run, track, achieve! Your essential app for logging distance and time on every r
 ## Screenshots
 <table>
   <tr>
-    <td><img src="screenshots/screen_3.png" alt="Screen 3" width="250"></td>
-    <td><img src="screenshots/screen_2.png" alt="Screen 2" width="250"></td>
     <td><img src="screenshots/screen_1.png" alt="Screen 1" width="250"></td>
+    <td><img src="screenshots/screen_2.png" alt="Screen 2" width="250"></td>
+    <td><img src="screenshots/screen_3.png" alt="Screen 3" width="250"></td>
   </tr>
 </table>
 

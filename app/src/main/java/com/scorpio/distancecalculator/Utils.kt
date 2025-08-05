@@ -49,9 +49,8 @@ fun calculateFinalTimeAndDistance(latestLocations: List<LocationEntity>): Pair<F
     return Pair(totalDistance, totalTime)
 }
 
-//converts seconds/metre to min/km
-//for pace
+// converts seconds/metre to min/km
+// for pace
 inline val Float.minPerKm: Float get() = this * 16.667f
 
 inline val Long.seconds: Long get() = this / 1000
-

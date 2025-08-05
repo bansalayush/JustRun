@@ -6,16 +6,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.times
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -24,7 +20,6 @@ import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandFini
 import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandPause
 import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandResume
 import com.scorpio.distancecalculator.ui.theme.DistanceCalculatorTheme
-import com.scorpio.distancecalculator.ui.theme.Tone_Option_1
 import com.scorpio.distancecalculator.ui.theme.composables.HomeScreen
 import com.scorpio.distancecalculator.ui.theme.composables.Screen
 import timber.log.Timber
@@ -44,8 +39,7 @@ class MainActivity : ComponentActivity() {
                         Modifier
                             .fillMaxSize()
                             .statusBarsPadding()
-                            .navigationBarsPadding()
-
+                            .navigationBarsPadding(),
                 ) {
                     NavHost(
                         navController = navController,

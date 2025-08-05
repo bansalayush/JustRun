@@ -31,16 +31,18 @@ class FinalCalculationService : LifecycleService() {
                         ),
                     )
                 println("calculating activity data")
-                activityDao.insertActivity(
-                    ActivityEntity(
-                        pace = 0.0,
-                        duration = duration,
-                        distance = distance,
-                        calories = 0.0,
-                        activityId = activityId,
-                    ),
-                )
-                println("activity logged")
+                if (distance > 0 && duration > 0) {
+                    activityDao.insertActivity(
+                        ActivityEntity(
+                            pace = 0.0,
+                            duration = duration,
+                            distance = distance,
+                            calories = 0.0,
+                            activityId = activityId,
+                        ),
+                    )
+                    println("activity logged")
+                }
                 stopSelf()
                 // make entry in DB
                 // kill this service

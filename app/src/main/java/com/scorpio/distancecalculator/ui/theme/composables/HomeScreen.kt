@@ -47,7 +47,7 @@ fun HomeScreen(
                     activityList.size,
                     itemContent = { i ->
                         ActivityItem(
-                            timestamp = activityList[i].activityId,
+                            timelabel = sdf.format(Date(activityList[i].activityId)),
                             distance = formatDistanceToKmSimple(activityList[i].distance),
                             duration = formatDuration(activityList[i].duration.seconds),
                             pace =
@@ -88,12 +88,12 @@ val sdf = SimpleDateFormat("EEE, MMM d , h:mm a", java.util.Locale.getDefault())
 
 @Composable
 fun ActivityItem(
-    timestamp: Long,
+    timelabel: String,
     distance: String,
     duration: String,
     pace: String,
 ) {
-    val date = Date(timestamp)
+
     Column(
         modifier =
             Modifier
@@ -102,7 +102,7 @@ fun ActivityItem(
                 .padding(horizontal = 18.dp, vertical = 14.dp),
     ) {
         Text(
-            text = sdf.format(date),
+            text = timelabel,
             color = Tone_Option_1.foreground.copy(alpha = 0.6f),
             style = MaterialTheme.typography.bodyMedium,
         )

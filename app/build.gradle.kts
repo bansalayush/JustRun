@@ -87,6 +87,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.timber)
     implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("com.google.accompanist:accompanist-permissions:0.37.3")
 }
 
 detekt {

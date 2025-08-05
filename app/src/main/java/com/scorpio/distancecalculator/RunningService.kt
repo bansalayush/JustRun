@@ -1,9 +1,12 @@
 package com.scorpio.distancecalculator
 
+import android.Manifest
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
@@ -76,17 +79,23 @@ class RunningService : LifecycleService() {
     }
 
     fun handleNotification() {
-        currentNotification =
-            NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("JustRun")
-                .setAutoCancel(false)
-                .setContentIntent(getMainActivityIntent())
-                .setOngoing(true)
-        startForeground(1, currentNotification.build())
-        updateNotification()
+        if (PackageManager.PERMISSION_GRANTED ==
+            checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+        ) {
+            currentNotification =
+                NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setContentTitle("JustRun")
+                    .setAutoCancel(false)
+                    .setContentIntent(getMainActivityIntent())
+                    .setOngoing(true)
+            startForeground(1, currentNotification.build())
+            updateNotification()
+        }
+
     }
 
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     private fun updateNotification() {
         notificationUpdateJob1 =
             lifecycleScope.launch {

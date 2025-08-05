@@ -19,11 +19,12 @@ Run, track, achieve! Your essential app for logging distance and time on every r
 </table>
 
 ## todo features
-- [ ] final distance calculation and a list page for all activities
+- [x] final distance calculation and a list page for all activities
 - [ ] remove notification and stop RunningService in case there's no running activity and user closes the app
-- [ ] show past activities
+- [x] show past activities
 - [ ] export data as a csv
 - [ ] add different screen options
+- [ ] settings page for G-login
 
 ## License
 MIT License. See `LICENSE` for details.

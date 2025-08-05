@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>ImplicitDefaultLocale:HomeScreen.kt$String.format( "%.2f /km", ((activityList[i].duration / 1000) / activityList[i].distance).minPerKm, )</ID>
+    <ID>LongMethod:HomeScreen.kt$@Composable fun ActivityItem( timestamp: Long, distance: String, duration: String, pace: String, )</ID>
+  </CurrentIssues>
+</SmellBaseline>

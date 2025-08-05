@@ -8,6 +8,9 @@ const val M_TO_KM = 1000.0
 const val SIXTY = 60
 
 @Suppress("ImplicitDefaultLocale")
+/**
+ * @param totalSeconds should be in seconds , not millis
+ */
 inline fun formatDuration(totalSeconds: Long): String {
     if (totalSeconds < 0) return "00:00:00"
     val duration = totalSeconds.seconds
@@ -45,3 +48,9 @@ fun calculateFinalTimeAndDistance(latestLocations: List<LocationEntity>): Pair<F
     }
     return Pair(totalDistance, totalTime)
 }
+
+// converts seconds/metre to min/km
+// for pace
+inline val Float.minPerKm: Float get() = this * 16.667f
+
+inline val Long.seconds: Long get() = this / 1000

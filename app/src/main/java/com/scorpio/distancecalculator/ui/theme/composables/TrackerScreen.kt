@@ -1,4 +1,4 @@
-package com.scorpio.distancecalculator.tracker
+package com.scorpio.distancecalculator.ui.theme.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +22,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +37,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.scorpio.distancecalculator.MainViewModel
 import com.scorpio.distancecalculator.R
 import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStateActive
@@ -44,19 +47,34 @@ import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStatePaused
 import com.scorpio.distancecalculator.ui.theme.Tone_Option_1
 
 @Composable
-fun Dp.toSp(): androidx.compose.ui.unit.TextUnit {
+fun Dp.toSp(): TextUnit {
     val density = LocalDensity.current
     return with(density) { toPx() / density.density }.sp
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Suppress("LongMethod")
 @Composable
 fun RunStatsScreen(
     viewModel: MainViewModel,
     onPlay: () -> Unit,
     onPause: () -> Unit,
-    onStop: () -> Unit,
+    onFinish: () -> Unit,
 ) {
+    val permissions =
+        rememberMultiplePermissionsState(
+            permissions =
+                listOf(
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                    android.Manifest.permission.POST_NOTIFICATIONS,
+                ),
+            onPermissionsResult = {
+            },
+        )
+    LaunchedEffect(Unit) {
+        permissions.launchMultiplePermissionRequest()
+    }
     val distance by viewModel.distanceFlow.collectAsStateWithLifecycle("0.00")
     val pace = "0.00"
     val duration by viewModel.elapsedTimeFlow.collectAsStateWithLifecycle("00:00")
@@ -132,7 +150,7 @@ fun RunStatsScreen(
                                 contentDescription = "Finish",
                                 size = buttonSize,
                                 iconSize = buttonIconSize,
-                                onClick = onStop,
+                                onClick = onFinish,
                             )
                         }
 
@@ -149,7 +167,7 @@ fun RunStatsScreen(
                                 contentDescription = "Finish",
                                 size = buttonSize,
                                 iconSize = buttonIconSize,
-                                onClick = onStop,
+                                onClick = onFinish,
                             )
                         }
 

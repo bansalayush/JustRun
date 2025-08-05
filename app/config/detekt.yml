@@ -35,6 +35,8 @@ complexity:
   LongMethod:
     active: true
     threshold: 60
+    ignoreAnnotated:
+      - "androidx.compose.runtime.Composable"
   TooManyFunctions:
     active: true
     thresholdInFiles: 20

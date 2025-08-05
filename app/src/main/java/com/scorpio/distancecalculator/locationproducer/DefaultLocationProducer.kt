@@ -36,9 +36,9 @@ class DefaultLocationProducer(
                         for (location in locations) {
                             val latitude = location.latitude
                             val longitude = location.longitude
-//                            val speedInMetersPerSecond = location.speed
+                            val speedInMetersPerSecond = location.speed
                             Log.d(TAG, "Location received: $latitude, $longitude speed:${location.speed}")
-                            trySend(MLocation(latitude, longitude))
+                            trySend(MLocation(latitude, longitude,speedInMetersPerSecond))
                         }
                     }
                 }

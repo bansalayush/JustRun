@@ -8,6 +8,7 @@ import androidx.room.RoomDatabase
 @Database(entities = [LocationEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun locationDao(): LocationDao
+    abstract fun activityDao(): ActivityDao
 
     companion object {
         // Volatile to ensure atomic access to the variable

@@ -39,61 +39,50 @@ class MainActivity : ComponentActivity() {
         setContent {
             DistanceCalculatorTheme {
                 val navController = rememberNavController()
-                Surface {
-                    Scaffold(
-                        modifier =
-                            Modifier
-                                .fillMaxHeight(1.0f)
-                                .fillMaxWidth()
-                                .border(
-                                    width = 24.dp,
-                                    color = Tone_Option_1.foreground,
-                                ),
-                        content = { paddingValues ->
-                            Box(
-                                modifier =
-                                    Modifier
-                                        .fillMaxSize()
-                                        .padding(paddingValues),
-                            ) {
-                                NavHost(
-                                    navController = navController,
-                                    startDestination = Screen.Tracker.route,
-                                ) {
-                                    composable(Screen.Home.route) {
-                                        HomeScreen(
-                                            navController = navController,
-                                        )
-                                    }
+                Box(
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .statusBarsPadding()
+                            .navigationBarsPadding()
 
-                                    composable(route = Screen.Tracker.route) {
-                                        RunStatsScreen(viewModel = viewModel, {
-                                            Intent(
-                                                this@MainActivity,
-                                                RunningService::class.java,
-                                            ).apply {
-                                                action = TrackerCommandResume.toString()
-                                            }.also { this@MainActivity.startService(it) }
-                                        }, {
-                                            Intent(
-                                                this@MainActivity,
-                                                RunningService::class.java,
-                                            ).apply {
-                                                action = TrackerCommandPause.toString()
-                                            }.also { this@MainActivity.startService(it) }
-                                        }, {
-                                            Intent(
-                                                this@MainActivity,
-                                                RunningService::class.java,
-                                            ).apply {
-                                                action = TrackerCommandFinish.toString()
-                                            }.also { this@MainActivity.startService(it) }
-                                        })
-                                    }
-                                }
-                            }
-                        },
-                    )
+                ) {
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screen.Home.route,
+                    ) {
+                        composable(Screen.Home.route) {
+                            HomeScreen(
+                                viewModel = viewModel,
+                                navController = navController,
+                            )
+                        }
+
+                        composable(route = Screen.Tracker.route) {
+                            RunStatsScreen(viewModel = viewModel, {
+                                Intent(
+                                    applicationContext,
+                                    RunningService::class.java,
+                                ).apply {
+                                    action = TrackerCommandResume.toString()
+                                }.also { this@MainActivity.startService(it) }
+                            }, {
+                                Intent(
+                                    applicationContext,
+                                    RunningService::class.java,
+                                ).apply {
+                                    action = TrackerCommandPause.toString()
+                                }.also { this@MainActivity.startService(it) }
+                            }, {
+                                Intent(
+                                    applicationContext,
+                                    RunningService::class.java,
+                                ).apply {
+                                    action = TrackerCommandFinish.toString()
+                                }.also { this@MainActivity.startService(it) }
+                            })
+                        }
+                    }
                 }
             }
         }

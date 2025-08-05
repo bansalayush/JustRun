@@ -29,6 +29,7 @@
             </intent-filter>
         </activity>
         <service android:name="com.scorpio.distancecalculator.RunningService"  android:foregroundServiceType="location"/>
+        <service android:name="com.scorpio.distancecalculator.FinalCalculationService"  android:foregroundServiceType="shortService"/>
     </application>
 
 </manifest>

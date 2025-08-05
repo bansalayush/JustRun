@@ -55,7 +55,7 @@ fun RunStatsScreen(
     viewModel: MainViewModel,
     onPlay: () -> Unit,
     onPause: () -> Unit,
-    onStop: () -> Unit,
+    onFinish: () -> Unit,
 ) {
     val distance by viewModel.distanceFlow.collectAsStateWithLifecycle("0.00")
     val pace = "0.00"
@@ -132,7 +132,7 @@ fun RunStatsScreen(
                                 contentDescription = "Finish",
                                 size = buttonSize,
                                 iconSize = buttonIconSize,
-                                onClick = onStop,
+                                onClick = onFinish,
                             )
                         }
 
@@ -149,7 +149,7 @@ fun RunStatsScreen(
                                 contentDescription = "Finish",
                                 size = buttonSize,
                                 iconSize = buttonIconSize,
-                                onClick = onStop,
+                                onClick = onFinish,
                             )
                         }
 

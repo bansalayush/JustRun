@@ -61,6 +61,7 @@ class RunningService : LifecycleService() {
                         notificationUpdateJob1?.cancel()
                         notificationUpdateJob2?.cancel()
                         notificationManager.cancel(1)
+                        startFinalCalculationService()
                         // send a signal to mainactivity to calculate the final distance and elapsed time
                         stopForeground(STOP_FOREGROUND_REMOVE)
                         stopSelf()
@@ -120,7 +121,18 @@ class RunningService : LifecycleService() {
         )
     }
 
+    private fun startFinalCalculationService() {
+        println("startFinalCalculationService")
+        Intent(
+            applicationContext,
+            FinalCalculationService::class.java,
+        ).apply {
+            putExtra(ACTIVITY_ID, runningTracker.currentActivityUUID)
+        }.also { this@RunningService.startService(it) }
+    }
+
     companion object {
         const val LAUNCH_MAINACTIIVTY_PENDING_INTENT_REQUEST_CODE = 143
+        const val ACTIVITY_ID = "activity_id"
     }
 }

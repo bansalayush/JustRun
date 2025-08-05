@@ -13,68 +13,60 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-
-val listOfActivities =
-    listOf<String>(
-        "Running",
-        "Cycling",
-        "Walking",
-        "Hiking",
-        "Swimming",
-        "Yoga",
-        "Dancing",
-        "Weightlifting",
-        "Pilates",
-        "Crossfit",
-        "Running",
-        "Cycling",
-        "Walking",
-        "Hiking",
-        "Swimming",
-        "Yoga",
-        "Dancing",
-        "Weightlifting",
-        "Pilates",
-        "Crossfit",
-        "Running",
-        "Cycling",
-        "Walking",
-        "Hiking",
-        "Swimming",
-        "Yoga",
-        "Dancing",
-        "Weightlifting",
-        "Pilates",
-        "Crossfit",
-    )
+import com.scorpio.distancecalculator.MainViewModel
+import com.scorpio.distancecalculator.formatDistanceToKmSimple
+import com.scorpio.distancecalculator.formatDuration
+import com.scorpio.distancecalculator.minPerKm
+import com.scorpio.distancecalculator.seconds
+import com.scorpio.distancecalculator.ui.theme.Tone_Option_1
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(navController: NavHostController, viewModel: MainViewModel) {
+    val activityList by viewModel.activitiesStateFlow.collectAsStateWithLifecycle()
     Box(modifier = Modifier.fillMaxSize()) {
         Box(
             modifier =
                 Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
         ) {
             LazyColumn {
                 items(
-                    listOfActivities.size,
-                    itemContent = {
-                        Text(
-                            text = listOfActivities[it],
-                            modifier = Modifier.padding(16.dp),
+                    activityList.size,
+                    itemContent = { i ->
+                        ActivityItem(
+                            timestamp = activityList[i].activityId,
+                            distance = formatDistanceToKmSimple(activityList[i].distance),
+                            duration = formatDuration(activityList[i].duration.seconds),
+                            pace = String.format(
+                                "%.2f /km",
+                                ((activityList[i].duration / 1000) / activityList[i].distance).minPerKm
+                            )
                         )
+                        if (i < activityList.size - 1) {
+                            Box(
+                                modifier = Modifier
+                                    .height(1.dp)
+                                    .fillMaxWidth()
+                                    .background(Tone_Option_1.foreground)
+                            )
+                        }
                     },
-                    key = { index -> index },
+                    key = { index -> activityList[index].activityId },
                 )
             }
         }
@@ -92,40 +84,78 @@ fun HomeScreen(navController: NavHostController) {
     }
 }
 
-// Background: #FAFAFA
-// Cards: #F8F8F8
-// Primary Text: #2C2C2C
-// Secondary Text: #666666
-// Borders: #E0E0E0
-// Icons: #8A8A8A
+val sdf = SimpleDateFormat("EEE, MMM d , h:mm a", java.util.Locale.getDefault())
 
-@Preview
 @Composable
-fun ActivityItem() {
-    Row(
-        modifier =
+fun ActivityItem(
+    timestamp: Long,
+    distance: String,
+    duration: String,
+    pace: String
+) {
+    val date = Date(timestamp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Tone_Option_1.background)
+            .padding(horizontal = 18.dp, vertical = 14.dp)
+    ) {
+        Text(
+            text = sdf.format(date),
+            color = Tone_Option_1.foreground.copy(alpha = 0.6f), // Primary text
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Row(
             Modifier
                 .fillMaxWidth()
-                .height(88.dp)
-                .background(Color.Blue)
-                .padding(horizontal = 16.dp, vertical = 20.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Box(
-            modifier =
-                Modifier
-                    .width(48.dp)
-                    .height(48.dp)
-                    .background(Color.Transparent)
-                    .border(2.dp, Color(0xFFE0E0E0)),
-        )
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
+                .padding(top = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-//            Text()
+            // Distance
+            Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.Start) {
+                Text(
+                    text = "$distance kms",
+                    color = Tone_Option_1.foreground,
+                    style = MaterialTheme.typography.headlineMedium,
+                )
+                Text(
+                    "DISTANCE",
+                    color = Tone_Option_1.foreground.copy(alpha = 0.6f), // Secondary text
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
+            // Duration
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = duration,
+                    color = Tone_Option_1.foreground,
+                    style = MaterialTheme.typography.headlineMedium,
+                )
+                Text(
+                    "DURATION",
+                    color = Tone_Option_1.foreground.copy(alpha = 0.6f),
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
+            // Pace
+            Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.End) {
+                Text(
+                    text = pace,
+                    maxLines = 1,
+                    color = Tone_Option_1.foreground,
+                    style = MaterialTheme.typography.headlineSmall,
+                )
+                Text(
+                    "PACE",
+                    textAlign = TextAlign.Start,
+                    maxLines = 1,
+                    color = Tone_Option_1.foreground.copy(alpha = 0.6f),
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
         }
     }
 }

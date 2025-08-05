@@ -92,7 +92,6 @@ class RunningService : LifecycleService() {
             startForeground(1, currentNotification.build())
             updateNotification()
         }
-
     }
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)

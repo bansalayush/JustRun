@@ -11,18 +11,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.times
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.scorpio.distancecalculator.tracker.RunStatsScreen
 import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandFinish
 import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandPause
 import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandResume
 import com.scorpio.distancecalculator.ui.theme.DistanceCalculatorTheme
 import com.scorpio.distancecalculator.ui.theme.composables.HomeScreen
+import com.scorpio.distancecalculator.ui.theme.composables.RunStatsScreen
 import com.scorpio.distancecalculator.ui.theme.composables.Screen
-import timber.log.Timber
 
 @Suppress("LongMethod")
 class MainActivity : ComponentActivity() {

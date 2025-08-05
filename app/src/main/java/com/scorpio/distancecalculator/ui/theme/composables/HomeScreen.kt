@@ -93,7 +93,6 @@ fun ActivityItem(
     duration: String,
     pace: String,
 ) {
-
     Column(
         modifier =
             Modifier

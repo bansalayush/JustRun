@@ -23,7 +23,8 @@ Run, track, achieve! Your essential app for logging distance and time on every r
 - [ ] remove notification and stop RunningService in case there's no running activity and user closes the app
 - [x] show past activities
 - [ ] export data as a csv
-- [x] add different screen options
+- [ ] add different screen options
+- [ ] settings page for G-login
 
 ## License
 MIT License. See `LICENSE` for details.

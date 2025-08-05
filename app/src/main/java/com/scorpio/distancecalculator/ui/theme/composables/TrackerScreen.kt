@@ -61,16 +61,17 @@ fun RunStatsScreen(
     onPause: () -> Unit,
     onFinish: () -> Unit,
 ) {
-    val permissions = rememberMultiplePermissionsState(
-        permissions = listOf(
-            android.Manifest.permission.ACCESS_FINE_LOCATION,
-            android.Manifest.permission.ACCESS_COARSE_LOCATION,
-            android.Manifest.permission.POST_NOTIFICATIONS,
-        ),
-        onPermissionsResult = {
-
-        }
-    )
+    val permissions =
+        rememberMultiplePermissionsState(
+            permissions =
+                listOf(
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                    android.Manifest.permission.POST_NOTIFICATIONS,
+                ),
+            onPermissionsResult = {
+            },
+        )
     LaunchedEffect(Unit) {
         permissions.launchMultiplePermissionRequest()
     }

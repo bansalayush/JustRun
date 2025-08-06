@@ -1,3 +1,7 @@
+import java.io.FileInputStream
+import java.io.IOException
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -12,11 +16,12 @@ android {
     compileSdk = 36
 
     defaultConfig {
+        val (name, code) = getVersionNameAndCode()
         applicationId = "com.scorpio.distancecalculator"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = code
+        versionName = name
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -53,6 +58,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.lifecycle.service)
+    implementation(project(":logger"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -116,5 +122,57 @@ ktlint {
     filter {
         exclude("**/generated/**")
         exclude("**/build/**")
+    }
+}
+
+fun getVersionNameAndCode(): Pair<String, Int> {
+    val versionPropertiesFile = file("version.properties")
+    if (versionPropertiesFile.canRead()) {
+        val versionProperties = Properties()
+        versionProperties.load(FileInputStream(versionPropertiesFile))
+        val versionMajor = versionProperties.getProperty("major").toInt()
+        val versionMinor = versionProperties.getProperty("minor").toInt()
+        val versionBuild = versionProperties.getProperty("build").toInt()
+
+        val versionName = "$versionMajor.$versionMinor.$versionBuild"
+        val versionCode = versionMajor * 100000000 + versionMinor * 1000 + versionBuild
+        return Pair<String, Int>(versionName, versionCode)
+    }
+    throw IOException("CAN'T READ VERSION.PROPERTIES")
+}
+
+fun updateBuildVersion(): Pair<String, Int> {
+    val versionPropertiesFile = file("version.properties")
+    if (versionPropertiesFile.canRead()) {
+        val versionProperties = Properties()
+        versionProperties.load(FileInputStream(versionPropertiesFile))
+        val versionMajor = versionProperties.getProperty("major").toInt()
+        val versionMinor = versionProperties.getProperty("minor").toInt()
+        val versionBuild = versionProperties.getProperty("build").toInt()
+        var newVersionBuild: Int
+        var newVersionMinor = versionMinor
+        if (versionBuild == 999) {
+            newVersionBuild = 1
+            newVersionMinor = versionMinor + 1
+            versionProperties.setProperty("build", newVersionBuild.toString())
+            versionProperties.setProperty("minor", newVersionMinor.toString())
+        } else {
+            newVersionBuild = versionBuild + 1
+            versionProperties.setProperty("build", newVersionBuild.toString())
+        }
+        versionProperties.store(versionPropertiesFile.writer(), null)
+
+        val versionName = "$versionMajor.$versionMinor.$newVersionBuild"
+        val versionCode = versionMajor * 100000000 + newVersionMinor * 1000 + newVersionBuild
+        return Pair<String, Int>(versionName, versionCode)
+    }
+    throw IOException("can't read version.properties")
+}
+
+tasks.register("bumpVersion") {
+    group = "versioning"
+    description = "Increment Build version"
+    doLast {
+        updateBuildVersion()
     }
 }

@@ -8,20 +8,27 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.scorpio.distancecalculator.MainViewModel
+import com.scorpio.distancecalculator.R
 import com.scorpio.distancecalculator.formatDistanceToKmSimple
 import com.scorpio.distancecalculator.formatDuration
 import com.scorpio.distancecalculator.minPerKm
@@ -73,13 +80,31 @@ fun HomeScreen(
         FloatingActionButton(
             modifier =
                 Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(12.dp),
+                    .padding(bottom = 36.dp, end = 36.dp)
+                    .height(78.dp)
+                    .width(78.dp)
+                    .align(Alignment.BottomEnd),
             onClick = {
                 navController.navigate(Screen.Tracker.route)
             },
+            shape = CircleShape,
         ) {
-            Text("+")
+            Box(
+                modifier =
+                    Modifier
+                        .size(78.dp)
+                        .background(Tone_Option_1.foreground),
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.sprint_forward),
+                    contentDescription = "Sprint Forward",
+                    tint = Tone_Option_1.background,
+                    modifier =
+                        Modifier
+                            .size(60.dp)
+                            .align(Alignment.Center),
+                )
+            }
         }
     }
 }

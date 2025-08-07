@@ -1,7 +1,6 @@
 package com.scorpio.distancecalculator.db
 
 import android.content.Context
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 
@@ -9,7 +8,7 @@ class DbCleanupWork(
     private val appContext: Context,
     private val params: WorkerParameters,
 ) : CoroutineWorker(appContext, params) {
-    private val workerExecutedAtKey = stringPreferencesKey("worker_executed_at")
+//    private val workerExecutedAtKey = stringPreferencesKey("worker_executed_at")
 
     override suspend fun doWork(): Result {
 //        appContext.dataStore.edit { prefs ->

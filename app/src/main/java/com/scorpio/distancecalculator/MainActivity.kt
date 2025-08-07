@@ -8,8 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,50 +32,58 @@ class MainActivity : ComponentActivity() {
         setContent {
             DistanceCalculatorTheme {
                 val navController = rememberNavController()
-                Box(
-                    modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .statusBarsPadding()
-                            .navigationBarsPadding(),
-                ) {
-                    NavHost(
-                        navController = navController,
-                        startDestination = Screen.Home.route,
-                    ) {
-                        composable(Screen.Home.route) {
-                            HomeScreen(
-                                viewModel = viewModel,
+                Scaffold(
+                    content = { innerPadding ->
+                        Box(
+                            modifier =
+                                Modifier
+                                    .fillMaxSize()
+                                    .padding(innerPadding),
+                        ) {
+                            NavHost(
                                 navController = navController,
-                            )
-                        }
+                                startDestination = Screen.Home.route,
+                            ) {
+                                composable(Screen.Home.route) {
+                                    HomeScreen(
+                                        viewModel = viewModel,
+                                        navController = navController,
+                                    )
+                                }
 
-                        composable(route = Screen.Tracker.route) {
-                            RunStatsScreen(viewModel = viewModel, {
-                                Intent(
-                                    applicationContext,
-                                    RunningService::class.java,
-                                ).apply {
-                                    action = TrackerCommandResume.toString()
-                                }.also { this@MainActivity.startService(it) }
-                            }, {
-                                Intent(
-                                    applicationContext,
-                                    RunningService::class.java,
-                                ).apply {
-                                    action = TrackerCommandPause.toString()
-                                }.also { this@MainActivity.startService(it) }
-                            }, {
-                                Intent(
-                                    applicationContext,
-                                    RunningService::class.java,
-                                ).apply {
-                                    action = TrackerCommandFinish.toString()
-                                }.also { this@MainActivity.startService(it) }
-                            })
+                                composable(route = Screen.Tracker.route) {
+                                    RunStatsScreen(
+                                        viewModel = viewModel,
+                                        onPlay = {
+                                            Intent(
+                                                applicationContext,
+                                                RunningService::class.java,
+                                            ).apply {
+                                                action = TrackerCommandResume.toString()
+                                            }.also { this@MainActivity.startService(it) }
+                                        },
+                                        onPause = {
+                                            Intent(
+                                                applicationContext,
+                                                RunningService::class.java,
+                                            ).apply {
+                                                action = TrackerCommandPause.toString()
+                                            }.also { this@MainActivity.startService(it) }
+                                        },
+                                        onFinish = {
+                                            Intent(
+                                                applicationContext,
+                                                RunningService::class.java,
+                                            ).apply {
+                                                action = TrackerCommandFinish.toString()
+                                            }.also { this@MainActivity.startService(it) }
+                                        },
+                                    )
+                                }
+                            }
                         }
-                    }
-                }
+                    },
+                )
             }
         }
     }

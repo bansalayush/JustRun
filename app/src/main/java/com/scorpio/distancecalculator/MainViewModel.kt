@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.scorpio.distancecalculator.db.ActivityEntity
 import com.scorpio.distancecalculator.db.AppDatabase
+import com.scorpio.distancecalculator.db.ToDeleteId
 import com.scorpio.distancecalculator.tracker.TrackerProvider
 import com.scorpio.distancecalculator.tracker.TrackingState
 import kotlinx.coroutines.flow.Flow
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
     // todo: access this via usecase
@@ -29,7 +31,7 @@ class MainViewModel : ViewModel() {
         TrackerProvider.getTracker(DistanceCalculatorApplication.mContext)
     }
 
-//    val speedStateFlow: Flow<Float> = runningTracker.speedStateFlow
+    //    val speedStateFlow: Flow<Float> = runningTracker.speedStateFlow
     val distanceFlow: Flow<String> =
         runningTracker.distanceFlow.map {
             formatDistanceToKmSimple(it)
@@ -39,6 +41,12 @@ class MainViewModel : ViewModel() {
             formatDuration(it)
         }
     val trackingState: Flow<TrackingState> = runningTracker.trackingState
+
+    fun deleteActivity(toDeleteId: Long) {
+        viewModelScope.launch {
+            activitiesDao.deleteActivity(ToDeleteId(toDeleteId))
+        }
+    }
 
     // this logic can break, WHY ?
     // in meantime if someone calls runningTracker.resume then the value of currentActivityUUID will change

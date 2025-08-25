@@ -1,6 +1,8 @@
 package com.scorpio.distancecalculator.ui.theme.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,18 +14,25 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -54,6 +63,7 @@ fun HomeScreen(
                     activityList.size,
                     itemContent = { i ->
                         ActivityItem(
+                            id = activityList[i].activityId,
                             timelabel = sdf.format(Date(activityList[i].activityId)),
                             distance = formatDistanceToKmSimple(activityList[i].distance),
                             duration = formatDuration(activityList[i].duration.seconds),
@@ -62,6 +72,9 @@ fun HomeScreen(
                                     "%.2f /km",
                                     ((activityList[i].duration / 1000) / activityList[i].distance).minPerKm,
                                 ),
+                            onDeleteClick = { toDeleteId ->
+                                viewModel.deleteActivity(toDeleteId)
+                            },
                         )
                         if (i < activityList.size - 1) {
                             Box(
@@ -111,13 +124,18 @@ fun HomeScreen(
 
 val sdf = SimpleDateFormat("EEE, MMM d , h:mm a", java.util.Locale.getDefault())
 
+@Suppress("LongParameterList")
+@Preview
 @Composable
 fun ActivityItem(
-    timelabel: String,
-    distance: String,
-    duration: String,
-    pace: String,
+    id: Long = 0L,
+    timelabel: String = "00:00",
+    distance: String = "00:00",
+    duration: String = "00:00",
+    pace: String = "00:00",
+    onDeleteClick: (id: Long) -> Unit = {},
 ) {
+    var expanded by remember { mutableStateOf(false) }
     Column(
         modifier =
             Modifier
@@ -125,11 +143,40 @@ fun ActivityItem(
                 .background(Tone_Option_1.background)
                 .padding(horizontal = 18.dp, vertical = 14.dp),
     ) {
-        Text(
-            text = timelabel,
-            color = Tone_Option_1.foreground.copy(alpha = 0.6f),
-            style = MaterialTheme.typography.bodyMedium,
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                text = timelabel,
+                color = Tone_Option_1.foreground.copy(alpha = 0.6f),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Box {
+                Icon(
+                    modifier =
+                        Modifier.clickable {
+                            expanded = true
+                        },
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "More Options",
+                    tint = Tone_Option_1.foreground,
+                )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Delete") },
+                        onClick = {
+                            expanded = false
+                            onDeleteClick.invoke(id)
+                        },
+                    )
+                }
+            }
+        }
+
         Row(
             Modifier
                 .fillMaxWidth()

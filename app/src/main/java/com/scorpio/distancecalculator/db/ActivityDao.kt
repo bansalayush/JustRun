@@ -1,6 +1,7 @@
 package com.scorpio.distancecalculator.db
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -13,4 +14,9 @@ interface ActivityDao {
 
     @Query("select * from activity_table order by activityId desc")
     fun getAllActivities(): Flow<List<ActivityEntity>>
+
+    @Delete(entity = ActivityEntity::class)
+    suspend fun deleteActivity(activityId: ToDeleteId)
 }
+
+data class ToDeleteId(val activityId: Long)

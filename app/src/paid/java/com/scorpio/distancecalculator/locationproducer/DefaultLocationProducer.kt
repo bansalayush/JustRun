@@ -1,6 +1,5 @@
 package com.scorpio.distancecalculator.locationproducer
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Looper
@@ -18,8 +17,7 @@ import kotlinx.coroutines.flow.callbackFlow
 typealias LocationProviderClient = FusedLocationProviderClient
 
 object LocationProviderClientProvider {
-    fun provideClient(context: Context): LocationProviderClient =
-        LocationServices.getFusedLocationProviderClient(context)
+    fun provideClient(context: Context): LocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
 }
 
 class DefaultLocationProducer(
@@ -49,7 +47,7 @@ class DefaultLocationProducer(
                             val speedInMetersPerSecond = location.speed
                             Log.d(
                                 TAG,
-                                "Location received: $latitude, $longitude speed:${location.speed}"
+                                "Location received: $latitude, $longitude speed:${location.speed}",
                             )
                             trySend(MLocation(latitude, longitude, speedInMetersPerSecond))
                         }

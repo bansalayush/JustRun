@@ -35,7 +35,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            manifestPlaceholders["appName"]= "JustRun"
+            manifestPlaceholders["appName"] = "JustRun"
         }
 
         debug {
@@ -50,14 +50,14 @@ android {
             applicationId = "com.scorpio.distancecalculator.open"
             versionCode = code
             versionName = name
-            manifestPlaceholders["appName"]= "DroidRun"
+            manifestPlaceholders["appName"] = "DroidRun"
         }
-        create("paid"){
+        create("paid") {
             dimension = "version"
             applicationId = "com.scorpio.distancecalculator.closed"
             versionCode = code
             versionName = name
-            manifestPlaceholders["appName"]= "PaidRun"
+            manifestPlaceholders["appName"] = "PaidRun"
         }
     }
     compileOptions {
@@ -104,11 +104,11 @@ dependencies {
     // For LiveData builder
     implementation(libs.androidx.lifecycle.livedata.ktx) // Check for the latest version
 
-    //paid
+    // paid
     "paidImplementation"(libs.play.services.location)
     //
-    "fdroidImplementation"("com.mapzen.android:lost:3.0.2"){
-        exclude(group="com.android.support", module="support-compat")
+    "fdroidImplementation"("com.mapzen.android:lost:3.0.2") {
+        exclude(group = "com.android.support", module = "support-compat")
     }
 
     implementation(libs.androidx.room.runtime)

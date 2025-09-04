@@ -16,7 +16,7 @@ object TrackerProvider {
             instance ?: let {
                 val locationProducer =
                     DefaultLocationProducer(
-                        LocationProviderClientProvider.provideClient(context)
+                        LocationProviderClientProvider.provideClient(context),
                     )
                 val locationDao = AppDatabase.getDatabase(context).locationDao()
                 RunningTracker(locationProducer, locationDao).also { instance = it }

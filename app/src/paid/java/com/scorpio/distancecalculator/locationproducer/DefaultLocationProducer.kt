@@ -1,16 +1,26 @@
 package com.scorpio.distancecalculator.locationproducer
 
+
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Looper
 import android.util.Log
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import com.scorpio.distancecalculator.MLocation
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+
+typealias LocationProviderClient = FusedLocationProviderClient
+
+object LocationProviderClientProvider {
+    fun provideClient(context: Context): LocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(context)
+}
 
 class DefaultLocationProducer(
     private val actualProvider: FusedLocationProviderClient,
@@ -37,7 +47,10 @@ class DefaultLocationProducer(
                             val latitude = location.latitude
                             val longitude = location.longitude
                             val speedInMetersPerSecond = location.speed
-                            Log.d(TAG, "Location received: $latitude, $longitude speed:${location.speed}")
+                            Log.d(
+                                TAG,
+                                "Location received: $latitude, $longitude speed:${location.speed}"
+                            )
                             trySend(MLocation(latitude, longitude, speedInMetersPerSecond))
                         }
                     }

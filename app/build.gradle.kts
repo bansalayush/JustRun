@@ -9,10 +9,11 @@ plugins {
     id("com.google.devtools.ksp")
     id("io.gitlab.arturbosch.detekt")
     id("org.jlleitschuh.gradle.ktlint")
+    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.baselineprofile)
 }
 
 android {
-    flavorDimensions("version")
     namespace = "com.scorpio.distancecalculator"
     compileSdk = 36
     val (name, code) = getVersionNameAndCode()
@@ -41,25 +42,16 @@ android {
         debug {
             isMinifyEnabled = false
             isShrinkResources = false
+            manifestPlaceholders["appName"] = "JustRun"
+        }
+        create("benchmark") {
+            initWith(buildTypes.getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
         }
     }
 
-    productFlavors {
-        create("fdroid") {
-            dimension = "version"
-            applicationId = "com.scorpio.distancecalculator.open"
-            versionCode = code
-            versionName = name
-            manifestPlaceholders["appName"] = "DroidRun"
-        }
-        create("paid") {
-            dimension = "version"
-            applicationId = "com.scorpio.distancecalculator.closed"
-            versionCode = code
-            versionName = name
-            manifestPlaceholders["appName"] = "PaidRun"
-        }
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -68,6 +60,7 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }
@@ -83,6 +76,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.lifecycle.service)
+    implementation(libs.androidx.profileinstaller)
 //    implementation(project(":logger"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -105,11 +99,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx) // Check for the latest version
 
     // paid
-    "paidImplementation"(libs.play.services.location)
+    implementation(libs.play.services.location)
     //
-    "fdroidImplementation"("com.mapzen.android:lost:3.0.2") {
-        exclude(group = "com.android.support", module = "support-compat")
-    }
 
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
@@ -118,12 +109,16 @@ dependencies {
     implementation(libs.androidx.room.ktx)
 
     implementation(libs.work.runtime.ktx)
+    implementation(project(":locationproducer"))
+    implementation(project(":tracker"))
 
     // Jetpack DataStore Preferences
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.timber)
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("com.google.accompanist:accompanist-permissions:0.37.3")
+    implementation( "com.google.dagger:hilt-android:2.57.1")
+    ksp("com.google.dagger:hilt-compiler:2.57.1")
 }
 
 detekt {
@@ -145,6 +140,11 @@ tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
 ktlint {
     version.set("1.1.1")
     android.set(true)
+    ignoreFailures.set(false)
+    outputToConsole.set(true)
+    outputColorName.set("RED")
+//    additionalEditorconfig.set(file("/some/additional/.editorconfig"))
+    baseline.set(file("config/ktlint/baseline.xml"))
     reporters {
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.HTML)
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)

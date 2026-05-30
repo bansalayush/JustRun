@@ -1,5 +1,6 @@
 package com.scorpio.distancecalculator
 
+import com.scorpio.distancecalculator.BuildConfig
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -16,6 +17,7 @@ import androidx.work.WorkManager
 import com.scorpio.distancecalculator.db.AppDatabase
 import com.scorpio.distancecalculator.db.DbCleanupWork
 import com.scorpio.distancecalculator.db.DbCleanupWork.Companion.CLEANUP_WORK_REPEAT_INTERVAL
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -23,11 +25,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
-import kotlin.time.measureTime
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 @Suppress("InjectDispatcher")
+@HiltAndroidApp
 class DistanceCalculatorApplication : Application() {
     val database: AppDatabase by lazy {
         AppDatabase.getDatabase(this)
@@ -37,13 +39,11 @@ class DistanceCalculatorApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Timber.plant(Timber.DebugTree())
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
         mContext = this
-        println(
-            measureTime {
-                database
-            },
-        )
+        database
 
         // todo: move this to a helper class
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

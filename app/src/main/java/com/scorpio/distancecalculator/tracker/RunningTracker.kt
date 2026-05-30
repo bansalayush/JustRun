@@ -1,22 +1,27 @@
 package com.scorpio.distancecalculator.tracker
 
 import android.location.Location
+import com.pomegranate.locationproducer.MLocationProducer
+import com.pomegranate.tracker.ActivityTracker
+import com.pomegranate.tracker.MIN_LOCATIONS_FOR_DISTANCE_CALCULATION
 import com.scorpio.distancecalculator.db.LocationDao
 import com.scorpio.distancecalculator.db.LocationEntity
-import com.scorpio.distancecalculator.locationproducer.MLocationProducer
+import com.scorpio.distancecalculator.toEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RunningTracker(
+class RunningTracker @Inject constructor(
     private val locationProducer: MLocationProducer,
     private val locationDao: LocationDao,
-    override val scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
 ) : ActivityTracker() {
+    override val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var locationTrackingJob: Job? = null
     private var distanceCalculationJob: Job? = null
 
@@ -30,7 +35,6 @@ class RunningTracker(
 
     override suspend fun resume() {
         super.resume()
-        println("DEBUG distanceCalculationJob")
         locationTrackingJob =
             scope.launch {
                 locationProducer.startLocationUpdates().collectLatest { location ->

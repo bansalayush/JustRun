@@ -21,3 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "DistanceCalculator"
 include(":app")
+include(":benchmark")
+include(":locationproducer")
+include(":tracker")

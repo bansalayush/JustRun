@@ -6,14 +6,21 @@ import androidx.lifecycle.lifecycleScope
 import com.scorpio.distancecalculator.RunningService.Companion.ACTIVITY_ID
 import com.scorpio.distancecalculator.db.ActivityEntity
 import com.scorpio.distancecalculator.db.AppDatabase
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FinalCalculationService : LifecycleService() {
+
+    @Inject
+    lateinit var appDatabase: Lazy<AppDatabase>
     private val activityDao by lazy {
-        AppDatabase.getDatabase(DistanceCalculatorApplication.mContext).activityDao()
+        appDatabase.get().activityDao()
     }
     private val locationDao by lazy {
-        AppDatabase.getDatabase(DistanceCalculatorApplication.mContext).locationDao()
+        appDatabase.get().locationDao()
     }
 
     override fun onStartCommand(

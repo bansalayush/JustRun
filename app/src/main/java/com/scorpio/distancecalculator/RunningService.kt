@@ -10,24 +10,25 @@ import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
+import com.pomegranate.tracker.TrackerCommands.*
 import com.scorpio.distancecalculator.notification.NOTIFICATION_CHANNEL_ID
-import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandFinish
-import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandPause
-import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandResume
-import com.scorpio.distancecalculator.tracker.TrackerProvider
+import com.scorpio.distancecalculator.tracker.RunningTracker
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class RunningService : LifecycleService() {
     private lateinit var currentNotification: NotificationCompat.Builder
     private lateinit var notificationManager: NotificationManager
     private var notificationUpdateJob1: Job? = null
     private var notificationUpdateJob2: Job? = null
 
-    private val runningTracker by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-        TrackerProvider.getTracker(this)
-    }
+    @Inject
+    lateinit var runningTracker: Lazy<RunningTracker>
 
     override fun onCreate() {
         super.onCreate()
@@ -45,7 +46,7 @@ class RunningService : LifecycleService() {
                 TrackerCommandResume.toString() -> {
                     lifecycleScope.launch {
 //                        LoggerProvider.getLogger().logEvent(RUNNING_SERVICE_STARTED)
-                        runningTracker.resume()
+                        runningTracker.get().resume()
                     }
                     handleNotification()
                 }
@@ -53,14 +54,14 @@ class RunningService : LifecycleService() {
                 TrackerCommandPause.toString() -> {
                     lifecycleScope.launch {
 //                        LoggerProvider.getLogger().logEvent(RUNNING_SERVICE_PAUSED)
-                        runningTracker.pause()
+                        runningTracker.get().pause()
                     }
                     handleNotification()
                 }
 
                 TrackerCommandFinish.toString() -> {
                     lifecycleScope.launch {
-                        runningTracker.finish()
+                        runningTracker.get().finish()
                         notificationUpdateJob1?.cancel()
                         notificationUpdateJob2?.cancel()
                         notificationManager.cancel(1)
@@ -98,7 +99,7 @@ class RunningService : LifecycleService() {
     private fun updateNotification() {
         notificationUpdateJob1 =
             lifecycleScope.launch {
-                runningTracker.distanceFlow.collectLatest {
+                runningTracker.get().distanceFlow.collectLatest {
                     val distance = formatDistanceToKmSimple(it)
                     currentNotification.setContentTitle(
                         "Distance $distance(kms)",
@@ -108,7 +109,7 @@ class RunningService : LifecycleService() {
             }
         notificationUpdateJob2 =
             lifecycleScope.launch {
-                runningTracker.elapsedTimeFlow.collectLatest {
+                runningTracker.get().elapsedTimeFlow.collectLatest {
                     val elapsedTime = formatDuration(it)
                     currentNotification.setContentText(
                         "Elapsed-Time $elapsedTime(mm:ss)",
@@ -130,12 +131,11 @@ class RunningService : LifecycleService() {
     }
 
     private fun startFinalCalculationService() {
-        println("startFinalCalculationService")
         Intent(
             applicationContext,
             FinalCalculationService::class.java,
         ).apply {
-            putExtra(ACTIVITY_ID, runningTracker.currentActivityUUID)
+            putExtra(ACTIVITY_ID, runningTracker.get().currentActivityUUID)
         }.also { this@RunningService.startService(it) }
     }
 

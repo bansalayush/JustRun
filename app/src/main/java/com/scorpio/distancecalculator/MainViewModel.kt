@@ -18,41 +18,42 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
-    private val appDatabase: AppDatabase,
-    private val runningTracker: Lazy<RunningTracker>
-) : ViewModel() {
-    // todo: access this via usecase
-    private val activitiesDao by lazy {
-        appDatabase.activityDao()
+class MainViewModel
+    @Inject
+    constructor(
+        private val appDatabase: AppDatabase,
+        private val runningTracker: Lazy<RunningTracker>,
+    ) : ViewModel() {
+        // todo: access this via usecase
+        private val activitiesDao by lazy {
+            appDatabase.activityDao()
+        }
+
+        val activitiesStateFlow: StateFlow<List<ActivityEntity>> =
+            activitiesDao.getAllActivities().stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList(),
+            )
+
+        //    val speedStateFlow: Flow<Float> = runningTracker.get().speedStateFlow
+        val distanceFlow: Flow<String> =
+            runningTracker.get().distanceFlow.map {
+                formatDistanceToKmSimple(it)
+            }
+        val elapsedTimeFlow: Flow<String> =
+            runningTracker.get().elapsedTimeFlow.map {
+                formatDuration(it)
+            }
+        val trackingState: Flow<TrackingState> = runningTracker.get().trackingState
+
+        fun deleteActivity(toDeleteId: Long) {
+            viewModelScope.launch {
+                activitiesDao.deleteActivity(ToDeleteId(toDeleteId))
+            }
+        }
+
+        // this logic can break, WHY ?
+        // in meantime if someone calls runningTracker.get().resume then the value of currentActivityUUID will change
+        // check this angle once
     }
-
-    val activitiesStateFlow: StateFlow<List<ActivityEntity>> =
-        activitiesDao.getAllActivities().stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList(),
-        )
-
-    //    val speedStateFlow: Flow<Float> = runningTracker.get().speedStateFlow
-    val distanceFlow: Flow<String> =
-        runningTracker.get().distanceFlow.map {
-            formatDistanceToKmSimple(it)
-        }
-    val elapsedTimeFlow: Flow<String> =
-        runningTracker.get().elapsedTimeFlow.map {
-            println("MainViewModelrunning tracker hascode ${runningTracker.get().hashCode()}")
-            formatDuration(it)
-        }
-    val trackingState: Flow<TrackingState> = runningTracker.get().trackingState
-
-    fun deleteActivity(toDeleteId: Long) {
-        viewModelScope.launch {
-            activitiesDao.deleteActivity(ToDeleteId(toDeleteId))
-        }
-    }
-
-    // this logic can break, WHY ?
-    // in meantime if someone calls runningTracker.get().resume then the value of currentActivityUUID will change
-    // check this angle once
-}

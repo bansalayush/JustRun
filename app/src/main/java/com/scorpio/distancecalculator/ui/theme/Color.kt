@@ -14,7 +14,7 @@ data class DualTone(
     val background: Color,
     val foreground: Color,
     val toneId: Long,
-    val displayName: String
+    val displayName: String,
 )
 
 object ColorPresets {
@@ -24,4 +24,3 @@ object ColorPresets {
     val Tone_Option_4 = DualTone(Color(0xff6A7BA2), Color(0xffFFDFDE), 3L, "Option 4")
     val listOfTones = listOf(Tone_Option_1, Tone_Option_2, Tone_Option_3, Tone_Option_4)
 }
-

@@ -13,7 +13,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class FinalCalculationService : LifecycleService() {
-
     @Inject
     lateinit var appDatabase: Lazy<AppDatabase>
     private val activityDao by lazy {
@@ -37,7 +36,6 @@ class FinalCalculationService : LifecycleService() {
                             activityId,
                         ),
                     )
-                println("calculating activity data")
                 if (distance > 0 && duration > 0) {
                     activityDao.insertActivity(
                         ActivityEntity(

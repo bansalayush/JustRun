@@ -20,8 +20,6 @@ class DbCleanupWork(
                 "${System.currentTimeMillis()}\n" + prefs[workerExecutedAtKey]
         }
 
-        println("Running DB cleanup work")
-
 //        LoggerProvider.getLogger().logEvent(WORKER_ENDED)
         return Result.success()
     }

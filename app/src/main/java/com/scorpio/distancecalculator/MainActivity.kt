@@ -11,26 +11,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.longPreferencesKey
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.pomegranate.tracker.TrackerCommands.TrackerCommandFinish
 import com.pomegranate.tracker.TrackerCommands.TrackerCommandPause
 import com.pomegranate.tracker.TrackerCommands.TrackerCommandResume
-import com.pomegranate.tracker.TrackerCommands.TrackerCommandFinish
 import com.scorpio.distancecalculator.ui.theme.ColorPresets
 import com.scorpio.distancecalculator.ui.theme.DualToneTheme
 import com.scorpio.distancecalculator.ui.theme.composables.HomeScreen
 import com.scorpio.distancecalculator.ui.theme.composables.RunStatsScreen
 import com.scorpio.distancecalculator.ui.theme.composables.Screen
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 
 @Suppress("LongMethod")
 @AndroidEntryPoint
@@ -77,7 +70,6 @@ class MainActivity : ComponentActivity() {
                                             } finally {
                                                 Trace.endSection()
                                             }
-
                                         },
                                         onPause = {
                                             try {
@@ -91,7 +83,6 @@ class MainActivity : ComponentActivity() {
                                             } finally {
                                                 Trace.endSection()
                                             }
-
                                         },
                                         onFinish = {
                                             try {
@@ -105,7 +96,6 @@ class MainActivity : ComponentActivity() {
                                             } finally {
                                                 Trace.endSection()
                                             }
-
                                         },
                                     )
                                 }

@@ -1,6 +1,5 @@
 package com.scorpio.distancecalculator
 
-import com.scorpio.distancecalculator.BuildConfig
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager

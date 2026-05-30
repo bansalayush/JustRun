@@ -10,7 +10,9 @@ import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import com.pomegranate.tracker.TrackerCommands.*
+import com.pomegranate.tracker.TrackerCommands.TrackerCommandFinish
+import com.pomegranate.tracker.TrackerCommands.TrackerCommandPause
+import com.pomegranate.tracker.TrackerCommands.TrackerCommandResume
 import com.scorpio.distancecalculator.notification.NOTIFICATION_CHANNEL_ID
 import com.scorpio.distancecalculator.tracker.RunningTracker
 import dagger.Lazy
@@ -41,7 +43,6 @@ class RunningService : LifecycleService() {
         startId: Int,
     ): Int {
         intent?.action?.let {
-            println("Running Service received action: $it")
             when (it) {
                 TrackerCommandResume.toString() -> {
                     lifecycleScope.launch {

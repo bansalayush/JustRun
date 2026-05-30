@@ -20,13 +20,17 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideFusedLocationProviderClient(@ApplicationContext context: Context): FusedLocationProviderClient {
+    fun provideFusedLocationProviderClient(
+        @ApplicationContext context: Context,
+    ): FusedLocationProviderClient {
         return LocationServices.getFusedLocationProviderClient(context)
     }
 
     @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+    fun provideAppDatabase(
+        @ApplicationContext context: Context,
+    ): AppDatabase {
         return AppDatabase.getDatabase(context)
     }
 
@@ -46,7 +50,7 @@ object AppModule {
     @Singleton
     fun provideRunningTracker(
         locationProducer: MLocationProducer,
-        locationDao: LocationDao
+        locationDao: LocationDao,
     ): RunningTracker {
         return RunningTracker(locationProducer, locationDao)
     }

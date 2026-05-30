@@ -115,14 +115,12 @@ fun RunStatsScreen(
                     unitText = unitText,
                 )
 
-
                 StatBlock(
                     label = "DURATION",
                     value = duration,
                     labelText = labelText,
                     bigText = bigText,
                 )
-
 
                 StatBlock(
                     label = "DISTANCE",
@@ -132,7 +130,6 @@ fun RunStatsScreen(
                     bigText = bigText,
                     unitText = unitText,
                 )
-
 
                 Spacer(Modifier.height(8.dp))
                 Row(
@@ -220,7 +217,7 @@ fun StatBlock(
             fontSize = bigText,
             fontWeight = FontWeight.Bold,
             color = color.foreground,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         if (unit != null && unitText != null) {
             Text(

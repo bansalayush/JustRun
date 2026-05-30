@@ -67,8 +67,4 @@ class DefaultLocationProducer
             }
             locationCallback = null
         }
-
-        companion object {
-            private const val TAG = "DefaultLocationClient"
-        }
     }

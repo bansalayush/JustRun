@@ -21,8 +21,9 @@ fun DualToneTheme(
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
-    val savedToneId by context.dataStore.data.map { it[longPreferencesKey("color_preset")] }
-        .collectAsState(colors.toneId)
+    val savedToneId by remember(context) {
+        context.dataStore.data.map { it[longPreferencesKey("color_preset")] }
+    }.collectAsState(colors.toneId)
     val savedTone =
         remember(savedToneId) {
             ColorPresets.listOfTones.find { it.toneId == savedToneId } ?: colors

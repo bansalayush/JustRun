@@ -1,8 +1,8 @@
-name: Android Build
+name: Android Release Build
 
 on:
-  workflow_dispatch: 
-    inputs: 
+  workflow_dispatch:
+    inputs:
       branch:
         description: 'Branch to build'
         required: true
@@ -11,7 +11,6 @@ on:
 jobs:
   build:
     name: Build
-#    needs: static-code-analysis
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -32,7 +31,13 @@ jobs:
           echo "RELEASE_KEY_ALIAS=${{ secrets.RELEASE_KEY_ALIAS }}" >> keys.properties
           echo "RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}" >> keys.properties
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > release.jks
-          echo "KEYSTORE_PATH=release.jks" > keys.properties
+          echo "KEYSTORE_PATH=$PWD/release.jks" > keys.properties
 
-      - name: Build with Gradle
-        run: ./gradlew clean build -x detekt
+      - name: Build Release Bundle (AAB)
+        run: ./gradlew bundleRelease -x detekt
+
+      - name: Upload Release Bundle
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-bundle-release
+          path: app/build/outputs/bundle/release/app-release.aab

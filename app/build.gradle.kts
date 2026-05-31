@@ -18,14 +18,25 @@ android {
     compileSdk = 36
     val (name, code) = getVersionNameAndCode()
     defaultConfig {
-
         applicationId = "com.scorpio.distancecalculator"
         minSdk = 24
         targetSdk = 36
         versionCode = code
         versionName = name
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    // get key.properties when Environment variables are not present
+    val keys = Properties()
+    keys.load(FileInputStream(rootProject.file("keys.properties")))
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(keys.getProperty("KEYSTORE_PATH"))
+            storePassword = keys.getProperty("RELEASE_STORE_PASSWORD")
+            keyAlias = keys.getProperty("RELEASE_KEY_ALIAS")
+            keyPassword = keys.getProperty("RELEASE_KEY_PASSWORD")
+        }
     }
 
     buildTypes {
@@ -37,6 +48,7 @@ android {
                 "proguard-rules.pro",
             )
             manifestPlaceholders["appName"] = "JustRun"
+            signingConfig = signingConfigs.getByName("release")
         }
 
         debug {

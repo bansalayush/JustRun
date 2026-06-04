@@ -9,21 +9,34 @@ plugins {
     id("com.google.devtools.ksp")
     id("io.gitlab.arturbosch.detekt")
     id("org.jlleitschuh.gradle.ktlint")
+    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.baselineprofile)
 }
 
 android {
     namespace = "com.scorpio.distancecalculator"
     compileSdk = 36
-
+    val (name, code) = getVersionNameAndCode()
     defaultConfig {
-        val (name, code) = getVersionNameAndCode()
         applicationId = "com.scorpio.distancecalculator"
         minSdk = 24
         targetSdk = 36
         versionCode = code
         versionName = name
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    // get key.properties when Environment variables are not present
+    val keys = Properties()
+    keys.load(FileInputStream(rootProject.file("keys.properties")))
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(keys.getProperty("KEYSTORE_PATH"))
+            storePassword = keys.getProperty("RELEASE_STORE_PASSWORD")
+            keyAlias = keys.getProperty("RELEASE_KEY_ALIAS")
+            keyPassword = keys.getProperty("RELEASE_KEY_PASSWORD")
+        }
     }
 
     buildTypes {
@@ -34,13 +47,23 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            manifestPlaceholders["appName"] = "JustRun"
+            signingConfig = signingConfigs.getByName("release")
         }
 
         debug {
             isMinifyEnabled = false
             isShrinkResources = false
+            manifestPlaceholders["appName"] = "JustRun"
+        }
+        create("benchmark") {
+            initWith(buildTypes.getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -49,6 +72,7 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }
@@ -64,6 +88,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.lifecycle.service)
+    implementation(libs.androidx.profileinstaller)
 //    implementation(project(":logger"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -85,7 +110,9 @@ dependencies {
     // For LiveData builder
     implementation(libs.androidx.lifecycle.livedata.ktx) // Check for the latest version
 
+    // paid
     implementation(libs.play.services.location)
+    //
 
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
@@ -94,12 +121,16 @@ dependencies {
     implementation(libs.androidx.room.ktx)
 
     implementation(libs.work.runtime.ktx)
+    implementation(project(":locationproducer"))
+    implementation(project(":tracker"))
 
     // Jetpack DataStore Preferences
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.timber)
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("com.google.accompanist:accompanist-permissions:0.37.3")
+    implementation("com.google.dagger:hilt-android:2.57.1")
+    ksp("com.google.dagger:hilt-compiler:2.57.1")
 }
 
 detekt {
@@ -121,6 +152,11 @@ tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
 ktlint {
     version.set("1.1.1")
     android.set(true)
+    ignoreFailures.set(false)
+    outputToConsole.set(true)
+    outputColorName.set("RED")
+//    additionalEditorconfig.set(file("/some/additional/.editorconfig"))
+    baseline.set(file("config/ktlint/baseline.xml"))
     reporters {
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.HTML)
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)

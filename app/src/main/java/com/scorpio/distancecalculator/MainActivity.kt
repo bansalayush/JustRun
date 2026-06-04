@@ -2,6 +2,7 @@ package com.scorpio.distancecalculator
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Trace
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -14,15 +15,18 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandFinish
-import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandPause
-import com.scorpio.distancecalculator.tracker.TrackerCommands.TrackerCommandResume
-import com.scorpio.distancecalculator.ui.theme.DistanceCalculatorTheme
+import com.pomegranate.tracker.TrackerCommands.TrackerCommandFinish
+import com.pomegranate.tracker.TrackerCommands.TrackerCommandPause
+import com.pomegranate.tracker.TrackerCommands.TrackerCommandResume
+import com.scorpio.distancecalculator.ui.theme.ColorPresets
+import com.scorpio.distancecalculator.ui.theme.DualToneTheme
 import com.scorpio.distancecalculator.ui.theme.composables.HomeScreen
 import com.scorpio.distancecalculator.ui.theme.composables.RunStatsScreen
 import com.scorpio.distancecalculator.ui.theme.composables.Screen
+import dagger.hilt.android.AndroidEntryPoint
 
 @Suppress("LongMethod")
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<MainViewModel>()
 
@@ -30,7 +34,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            DistanceCalculatorTheme {
+            DualToneTheme(colors = ColorPresets.Tone_Option_1) {
                 val navController = rememberNavController()
                 Scaffold(
                     content = { innerPadding ->
@@ -55,28 +59,43 @@ class MainActivity : ComponentActivity() {
                                     RunStatsScreen(
                                         viewModel = viewModel,
                                         onPlay = {
-                                            Intent(
-                                                applicationContext,
-                                                RunningService::class.java,
-                                            ).apply {
-                                                action = TrackerCommandResume.toString()
-                                            }.also { this@MainActivity.startService(it) }
+                                            try {
+                                                Trace.beginSection("MainActivity: onPlay")
+                                                Intent(
+                                                    applicationContext,
+                                                    RunningService::class.java,
+                                                ).apply {
+                                                    action = TrackerCommandResume.toString()
+                                                }.also { this@MainActivity.startService(it) }
+                                            } finally {
+                                                Trace.endSection()
+                                            }
                                         },
                                         onPause = {
-                                            Intent(
-                                                applicationContext,
-                                                RunningService::class.java,
-                                            ).apply {
-                                                action = TrackerCommandPause.toString()
-                                            }.also { this@MainActivity.startService(it) }
+                                            try {
+                                                Trace.beginSection("MainActivity: onPause")
+                                                Intent(
+                                                    applicationContext,
+                                                    RunningService::class.java,
+                                                ).apply {
+                                                    action = TrackerCommandPause.toString()
+                                                }.also { this@MainActivity.startService(it) }
+                                            } finally {
+                                                Trace.endSection()
+                                            }
                                         },
                                         onFinish = {
-                                            Intent(
-                                                applicationContext,
-                                                RunningService::class.java,
-                                            ).apply {
-                                                action = TrackerCommandFinish.toString()
-                                            }.also { this@MainActivity.startService(it) }
+                                            try {
+                                                Trace.beginSection("MainActivity: onFinish")
+                                                Intent(
+                                                    applicationContext,
+                                                    RunningService::class.java,
+                                                ).apply {
+                                                    action = TrackerCommandFinish.toString()
+                                                }.also { this@MainActivity.startService(it) }
+                                            } finally {
+                                                Trace.endSection()
+                                            }
                                         },
                                     )
                                 }

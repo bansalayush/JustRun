@@ -39,12 +39,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.pomegranate.tracker.TrackingState
 import com.scorpio.distancecalculator.MainViewModel
 import com.scorpio.distancecalculator.R
-import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStateActive
-import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStateFinished
-import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStatePaused
-import com.scorpio.distancecalculator.ui.theme.Tone_Option_1
+import com.scorpio.distancecalculator.ui.theme.LocalDualToneColors
 
 @Composable
 fun Dp.toSp(): TextUnit {
@@ -75,15 +73,16 @@ fun RunStatsScreen(
     LaunchedEffect(Unit) {
         permissions.launchMultiplePermissionRequest()
     }
+    val color = LocalDualToneColors.current
     val distance by viewModel.distanceFlow.collectAsStateWithLifecycle("0.00")
     val pace = "0.00"
     val duration by viewModel.elapsedTimeFlow.collectAsStateWithLifecycle("00:00")
-    val trackingState by viewModel.trackingState.collectAsStateWithLifecycle(TrackingStateFinished)
+    val trackingState by viewModel.trackingState.collectAsStateWithLifecycle(TrackingState.TrackingStateFinished)
     BoxWithConstraints(
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(Tone_Option_1.background),
+                .background(color.background),
         contentAlignment = Alignment.Center,
     ) {
         val bigText = (this.maxWidth * 0.2f).toSp()
@@ -106,6 +105,7 @@ fun RunStatsScreen(
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 Spacer(Modifier.height(4.dp))
+
                 StatBlock(
                     label = "PACE",
                     value = pace,
@@ -114,12 +114,14 @@ fun RunStatsScreen(
                     bigText = bigText,
                     unitText = unitText,
                 )
+
                 StatBlock(
                     label = "DURATION",
                     value = duration,
                     labelText = labelText,
                     bigText = bigText,
                 )
+
                 StatBlock(
                     label = "DISTANCE",
                     value = distance,
@@ -128,6 +130,7 @@ fun RunStatsScreen(
                     bigText = bigText,
                     unitText = unitText,
                 )
+
                 Spacer(Modifier.height(8.dp))
                 Row(
                     Modifier
@@ -137,7 +140,7 @@ fun RunStatsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     when (trackingState) {
-                        TrackingStatePaused -> {
+                        TrackingState.TrackingStatePaused -> {
                             RoundIconButton(
                                 icon = Icons.Default.PlayArrow,
                                 contentDescription = "Start",
@@ -154,7 +157,7 @@ fun RunStatsScreen(
                             )
                         }
 
-                        TrackingStateActive -> {
+                        TrackingState.TrackingStateActive -> {
                             RoundIconButton(
                                 icon = ImageVector.vectorResource(id = R.drawable.pause_icon),
                                 contentDescription = "Pause",
@@ -171,7 +174,7 @@ fun RunStatsScreen(
                             )
                         }
 
-                        TrackingStateFinished ->
+                        TrackingState.TrackingStateFinished ->
                             RoundIconButton(
                                 icon = Icons.Default.PlayArrow,
                                 contentDescription = "Start",
@@ -196,6 +199,7 @@ fun StatBlock(
     bigText: TextUnit,
     unitText: TextUnit? = null,
 ) {
+    val color = LocalDualToneColors.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -205,14 +209,14 @@ fun StatBlock(
             text = label,
             fontSize = labelText,
             fontWeight = FontWeight.Normal,
-            color = Tone_Option_1.foreground,
+            color = color.foreground,
             textAlign = TextAlign.Center,
         )
         Text(
             text = value,
             fontSize = bigText,
             fontWeight = FontWeight.Bold,
-            color = Tone_Option_1.foreground,
+            color = color.foreground,
             textAlign = TextAlign.Center,
         )
         if (unit != null && unitText != null) {
@@ -220,7 +224,7 @@ fun StatBlock(
                 text = unit,
                 fontSize = unitText,
                 fontWeight = FontWeight.Medium,
-                color = Tone_Option_1.foreground,
+                color = color.foreground,
                 textAlign = TextAlign.Center,
             )
         }
@@ -235,10 +239,11 @@ fun RoundIconButton(
     iconSize: Dp,
     onClick: () -> Unit,
 ) {
+    val color = LocalDualToneColors.current
     Button(
         onClick = onClick,
         shape = CircleShape,
-        colors = ButtonDefaults.buttonColors(containerColor = Tone_Option_1.foreground),
+        colors = ButtonDefaults.buttonColors(containerColor = color.foreground),
         contentPadding = PaddingValues(0.dp),
         modifier =
             Modifier
@@ -248,7 +253,7 @@ fun RoundIconButton(
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
-            tint = Tone_Option_1.background,
+            tint = color.background,
             modifier = Modifier.size(iconSize),
         )
     }

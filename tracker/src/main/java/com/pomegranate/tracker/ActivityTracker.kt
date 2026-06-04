@@ -1,8 +1,8 @@
-package com.scorpio.distancecalculator.tracker
+package com.pomegranate.tracker
 
-import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStateActive
-import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStateFinished
-import com.scorpio.distancecalculator.tracker.TrackingState.TrackingStatePaused
+import com.pomegranate.tracker.TrackingState.TrackingStateActive
+import com.pomegranate.tracker.TrackingState.TrackingStateFinished
+import com.pomegranate.tracker.TrackingState.TrackingStatePaused
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

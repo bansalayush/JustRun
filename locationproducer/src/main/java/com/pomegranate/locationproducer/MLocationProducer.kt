@@ -1,6 +1,5 @@
-package com.scorpio.distancecalculator.locationproducer
+package com.pomegranate.locationproducer
 
-import com.scorpio.distancecalculator.MLocation
 import kotlinx.coroutines.flow.Flow
 
 interface MLocationProducer {

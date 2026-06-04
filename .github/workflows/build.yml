@@ -26,11 +26,13 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Create keys.properties and keystore
+        run: |
+          echo "RELEASE_STORE_PASSWORD=${{ secrets.RELEASE_STORE_PASSWORD }}" >> keys.properties
+          echo "RELEASE_KEY_ALIAS=${{ secrets.RELEASE_KEY_ALIAS }}" >> keys.properties
+          echo "RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}" >> keys.properties
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > release.jks
+          echo "KEYSTORE_PATH=release.jks" > keys.properties
+
       - name: Build with Gradle
         run: ./gradlew clean build -x detekt
-
-#      - name: Upload APK
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: app-debug
-#          path: app/build/outputs/apk/debug/app-debug.apk

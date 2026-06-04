@@ -1,6 +1,7 @@
 package com.scorpio.distancecalculator
 
 import android.location.Location
+import com.pomegranate.locationproducer.MLocation
 import com.scorpio.distancecalculator.db.LocationEntity
 import kotlin.time.Duration.Companion.seconds
 
@@ -54,3 +55,12 @@ fun calculateFinalTimeAndDistance(latestLocations: List<LocationEntity>): Pair<F
 inline val Float.minPerKm: Float get() = this * 16.667f
 
 inline val Long.seconds: Long get() = this / 1000
+
+fun MLocation.toEntity(activityUUID: Long): LocationEntity {
+    return LocationEntity(
+        latitude = this.latitude,
+        longitude = this.longitude,
+        speed = this.speed,
+        activityId = activityUUID,
+    )
+}

@@ -1,4 +1,4 @@
-package com.scorpio.distancecalculator.tracker
+package com.pomegranate.tracker
 
 import kotlinx.coroutines.flow.StateFlow
 

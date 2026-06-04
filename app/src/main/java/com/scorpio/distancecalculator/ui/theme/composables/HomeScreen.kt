@@ -42,7 +42,7 @@ import com.scorpio.distancecalculator.formatDistanceToKmSimple
 import com.scorpio.distancecalculator.formatDuration
 import com.scorpio.distancecalculator.minPerKm
 import com.scorpio.distancecalculator.seconds
-import com.scorpio.distancecalculator.ui.theme.Tone_Option_1
+import com.scorpio.distancecalculator.ui.theme.LocalDualToneColors
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -53,6 +53,7 @@ fun HomeScreen(
 ) {
     val activityList by viewModel.activitiesStateFlow.collectAsStateWithLifecycle()
     Box(modifier = Modifier.fillMaxSize()) {
+        val color = LocalDualToneColors.current
         Box(
             modifier =
                 Modifier
@@ -82,7 +83,7 @@ fun HomeScreen(
                                     Modifier
                                         .height(1.dp)
                                         .fillMaxWidth()
-                                        .background(Tone_Option_1.foreground),
+                                        .background(color.foreground),
                             )
                         }
                     },
@@ -106,12 +107,12 @@ fun HomeScreen(
                 modifier =
                     Modifier
                         .size(78.dp)
-                        .background(Tone_Option_1.foreground),
+                        .background(color.foreground),
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.sprint_forward),
                     contentDescription = "Sprint Forward",
-                    tint = Tone_Option_1.background,
+                    tint = color.background,
                     modifier =
                         Modifier
                             .size(60.dp)
@@ -135,12 +136,13 @@ fun ActivityItem(
     pace: String = "00:00",
     onDeleteClick: (id: Long) -> Unit = {},
 ) {
+    val color = LocalDualToneColors.current
     var expanded by remember { mutableStateOf(false) }
     Column(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .background(Tone_Option_1.background)
+                .background(color.background)
                 .padding(horizontal = 18.dp, vertical = 14.dp),
     ) {
         Row(
@@ -149,7 +151,7 @@ fun ActivityItem(
         ) {
             Text(
                 text = timelabel,
-                color = Tone_Option_1.foreground.copy(alpha = 0.6f),
+                color = color.foreground.copy(alpha = 0.6f),
                 style = MaterialTheme.typography.bodyMedium,
             )
             Box {
@@ -160,7 +162,7 @@ fun ActivityItem(
                         },
                     imageVector = Icons.Default.MoreVert,
                     contentDescription = "More Options",
-                    tint = Tone_Option_1.foreground,
+                    tint = color.foreground,
                 )
                 DropdownMenu(
                     expanded = expanded,
@@ -187,12 +189,12 @@ fun ActivityItem(
             Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.Start) {
                 Text(
                     text = "$distance kms",
-                    color = Tone_Option_1.foreground,
+                    color = color.foreground,
                     style = MaterialTheme.typography.headlineMedium,
                 )
                 Text(
                     "DISTANCE",
-                    color = Tone_Option_1.foreground.copy(alpha = 0.6f),
+                    color = color.foreground.copy(alpha = 0.6f),
                     style = MaterialTheme.typography.labelSmall,
                 )
             }
@@ -203,12 +205,12 @@ fun ActivityItem(
             ) {
                 Text(
                     text = duration,
-                    color = Tone_Option_1.foreground,
+                    color = color.foreground,
                     style = MaterialTheme.typography.headlineMedium,
                 )
                 Text(
                     "DURATION",
-                    color = Tone_Option_1.foreground.copy(alpha = 0.6f),
+                    color = color.foreground.copy(alpha = 0.6f),
                     style = MaterialTheme.typography.labelSmall,
                 )
             }
@@ -217,14 +219,14 @@ fun ActivityItem(
                 Text(
                     text = pace,
                     maxLines = 1,
-                    color = Tone_Option_1.foreground,
+                    color = color.foreground,
                     style = MaterialTheme.typography.headlineSmall,
                 )
                 Text(
                     "PACE",
                     textAlign = TextAlign.Start,
                     maxLines = 1,
-                    color = Tone_Option_1.foreground.copy(alpha = 0.6f),
+                    color = color.foreground.copy(alpha = 0.6f),
                     style = MaterialTheme.typography.labelSmall,
                 )
             }

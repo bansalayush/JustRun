@@ -18,3 +18,7 @@ local.properties
 /dev_todo.md
 /dev_issues.md
 /prompts.md
+/androidsigning.jks
+/androidsigning_jks_base64.txt
+keys.properties
+*.aab

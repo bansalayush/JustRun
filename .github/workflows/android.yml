@@ -23,6 +23,15 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Create keys.properties and keystore
+        run: |
+          echo "RELEASE_STORE_PASSWORD=${{ secrets.RELEASE_STORE_PASSWORD }}" >> keys.properties
+          echo "RELEASE_KEY_ALIAS=${{ secrets.RELEASE_KEY_ALIAS }}" >> keys.properties
+          echo "RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}" >> keys.properties
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > release.jks
+          echo "KEYSTORE_PATH=$PWD/release.jks" >> keys.properties
+          cat keys.properties
+
       - name: Run ktlint
         run: ./gradlew ktlintCheck
 
@@ -45,6 +54,14 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+
+      - name: Create keys.properties and keystore
+        run: |
+          echo "RELEASE_STORE_PASSWORD=${{ secrets.RELEASE_STORE_PASSWORD }}" >> keys.properties
+          echo "RELEASE_KEY_ALIAS=${{ secrets.RELEASE_KEY_ALIAS }}" >> keys.properties
+          echo "RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}" >> keys.properties
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > release.jks
+          echo "KEYSTORE_PATH=$PWD/release.jks" >> keys.properties
 
       - name: Build with Gradle
         run: ./gradlew build

@@ -203,6 +203,54 @@ nav {
     color: var(--text-muted);
 }
 
+/* Download Section */
+.download {
+    padding: 8rem 0;
+    text-align: center;
+    background: #f9f9fb;
+    border-top: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.download h2 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.download p {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto 3rem;
+}
+
+.download-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.download-badge {
+    display: inline-block;
+    transition: var(--transition);
+}
+
+.download-badge img {
+    height: 56px;
+    display: block;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: var(--transition);
+}
+
+.download-badge:hover {
+    transform: translateY(-4px);
+}
+
+.download-badge:hover img {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
 /* Footer */
 footer {
     padding: 4rem 0;

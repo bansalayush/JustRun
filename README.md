@@ -2,6 +2,10 @@
 [![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?logo=android&logoColor=white)](https://www.android.com/)
 [![Language](https://img.shields.io/badge/Language-Kotlin-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+<a href="https://indusapp.store/o6fnoiai"><img alt="Get it on Indus Appstore" src="https://docstore.indusappstore.com/public/external/developerdashboard-static/badge-black-background-english.png" height="20"/></a>
+
+
 # JustRun - Running Tracker
 Run, track, achieve! Your essential app for logging distance and time on every run and jog.
 
@@ -25,6 +29,10 @@ Run, track, achieve! Your essential app for logging distance and time on every r
 - [ ] export data as a csv
 - [ ] add different screen options
 - [ ] settings page for G-login
+
+## Download
+
+<a href="https://indusapp.store/o6fnoiai"><img alt="Get it on Indus Appstore" src="https://docstore.indusappstore.com/public/external/developerdashboard-static/badge-black-background-english.png"/></a>
 
 ## License
 MIT License. See `LICENSE` for details.
